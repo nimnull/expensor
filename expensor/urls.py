@@ -1,10 +1,13 @@
 from django.conf.urls import patterns, include, url
-
-# Uncomment the next two lines to enable the admin:
 from django.contrib import admin
+
+from core.views import ActionView
+
+
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    url(r'^$', ActionView.as_view(), name='actions')
     # Examples:
     # url(r'^$', 'expensor.views.home', name='home'),
     # url(r'^expensor/', include('expensor.foo.urls')),

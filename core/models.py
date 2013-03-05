@@ -29,14 +29,14 @@ class Person(models.Model):
     position = models.CharField(max_length=256)
     notes = models.TextField(blank=True, null=True)
     is_active = models.BooleanField(db_index=True, default=False)
-    works_from = models.DateTimeField(default=datetime.utcnow)
+    works_from = models.DateField(default=datetime.utcnow)
 
 
 class Salary(models.Model):
     person = models.ForeignKey(Person)
     amount = models.DecimalField(decimal_places=2, max_digits=10)
     created_at = models.DateTimeField(default=datetime.utcnow)
-    active_from = models.DateTimeField(default=datetime.utcnow)
+    active_from = models.DateField(default=datetime.utcnow)
 
     class Meta:
         get_latest_by = 'active_from'

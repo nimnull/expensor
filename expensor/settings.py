@@ -112,13 +112,14 @@ BASE_MIDDLEWARE_CLASSES = (
 
 
 if DEBUG:
+    MIDDLEWARE_CLASSES = BASE_MIDDLEWARE_CLASSES
+else:
     MIDDLEWARE_CLASSES = (
         'django.middleware.cache.UpdateCacheMiddleware',
     ) + BASE_MIDDLEWARE_CLASSES + (
         'django.middleware.cache.FetchFromCacheMiddleware',
     )
-else:
-    MIDDLEWARE_CLASSES = BASE_MIDDLEWARE_CLASSES
+
 
 ROOT_URLCONF = 'expensor.urls'
 
@@ -145,12 +146,13 @@ INSTALLED_APPS = (
     # Third party:
     'south',
     'debug_toolbar',
+    'annoying',
     # My apps:
     'core'
 )
 
 INTERNAL_IPS = ('127.0.0.1',)
-
+FILE_UPLOAD_PERMISSIONS = 644
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
