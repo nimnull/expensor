@@ -1,0 +1,7 @@
+DIRECTION_IN = 1
+DIRECTION_OUT = 2
+
+DIRECTION_CHOICES = (
+    (DIRECTION_IN, 'in'),
+    (DIRECTION_OUT, 'out')
+)
