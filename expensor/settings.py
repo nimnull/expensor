@@ -153,6 +153,13 @@ INSTALLED_APPS = (
 
 INTERNAL_IPS = ('127.0.0.1',)
 FILE_UPLOAD_PERMISSIONS = 644
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_ENGINE = 'redis_sessions.session'
+SESSION_REDIS_HOST = 'localhost'
+SESSION_REDIS_PORT = 6379
+SESSION_REDIS_DB = 1
+
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.

@@ -1,2 +1,7 @@
+# ignoring compiled python files
 *.py[co]
+
+# ignoring sublime extension settings
 .codeintel
+# ignoring collected static files
+expensor/static/
