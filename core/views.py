@@ -1,8 +1,27 @@
 # -*- encoding: utf-8 -*-
 from __future__ import absolute_import
-from django.views.generic.base import TemplateView
+
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.views.generic import TemplateView, ListView
+
+from .models import Person
 
 
-class ActionView(TemplateView):
-    template_name = 'actions.html'
-# Create your views here.
+class AuthRequiredMixin(object):
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(AuthRequiredMixin, self).dispatch(request, *args, **kwargs)
+
+
+class ActionView(AuthRequiredMixin, TemplateView):
+    template_name = 'core/actions.html'
+
+
+class DashboardView(AuthRequiredMixin, TemplateView):
+    template_name = 'core/dashboard.html'
+
+
+class PeopleView(AuthRequiredMixin, ListView):
+    model = Person
