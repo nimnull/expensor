@@ -31,6 +31,10 @@ class Person(models.Model):
     is_active = models.BooleanField(db_index=True, default=False)
     works_from = models.DateField(default=datetime.utcnow)
 
+    @property
+    def salary(self):
+        return Salary.objects.filter(person=self).latest('active_from')
+
 
 class Salary(models.Model):
     person = models.ForeignKey(Person)
