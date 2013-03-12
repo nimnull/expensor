@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+from django.views.generic import TemplateView
 
 from core.views import ActionView
 
@@ -7,7 +8,10 @@ from core.views import ActionView
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^$', ActionView.as_view(), name='actions'),
+    url(r'^$', TemplateView.as_view(template_name="index.html")),
+    url(r'^auth/', include('django.contrib.auth.urls', namespace='auth',
+                           app_name='auth')),
+    url(r'_/', include('core.urls', namespace='core', app_name='core')),
     # Examples:
     # url(r'^$', 'expensor.views.home', name='home'),
     # url(r'^expensor/', include('expensor.foo.urls')),
