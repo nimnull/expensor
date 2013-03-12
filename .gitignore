@@ -3,5 +3,6 @@
 
 # ignoring sublime extension settings
 .codeintel
+.idea
 # ignoring collected static files
 expensor/static/
