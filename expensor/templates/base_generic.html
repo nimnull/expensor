@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ page_title }}</title>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="{{ STATIC_URL }}css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        body {
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+{% block body %}
+<div class="container">
+    {% block container %}{% endblock container %}
+</div>
+{% endblock body %}
+{% block extra_js %}{% endblock extra_js %}
+</body>
+</html>

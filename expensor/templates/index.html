@@ -1,0 +1,15 @@
+{% extends "base_generic.html" %}
+
+{% block container %}
+    <div class="row">
+        <div class="span4 offset4">
+            <div class="hero-unit">
+                <h3>Бюджеты</h3>
+                <p>Расчет начислений/выплат</p>
+                <p class="pull-right">
+                    <a class="btn btn-primary" href="{% url 'auth:login' %}">Войти</a>
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock container %}
