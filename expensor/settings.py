@@ -14,12 +14,12 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'expensor',
-        'USER': 'nimnull',
-        'PASSWORD': '',
-        'HOST': '127.0.0.1',
-        'PORT': '',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'expensor.db',
+        # 'USER': 'vagrant',
+        # 'PASSWORD': '',
+        # 'HOST': '192.168.33.10',
+        # 'PORT': '',
     }
 }
 
@@ -155,10 +155,10 @@ INTERNAL_IPS = ('127.0.0.1',)
 FILE_UPLOAD_PERMISSIONS = 644
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-SESSION_ENGINE = 'redis_sessions.session'
-SESSION_REDIS_HOST = 'localhost'
-SESSION_REDIS_PORT = 6379
-SESSION_REDIS_DB = 1
+# SESSION_ENGINE = 'redis_sessions.session'
+# SESSION_REDIS_HOST = '192.168.33.10'
+# SESSION_REDIS_PORT = 6379
+# SESSION_REDIS_DB = 1
 
 LOGIN_REDIRECT_URL = 'core:dashboard'
 # A sample logging configuration. The only tangible logging
