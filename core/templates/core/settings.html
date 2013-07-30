@@ -1,0 +1,44 @@
+{% extends "core/inner_base.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="span10">
+            <h3>Счета <sup><small><a href="#newAccount" data-toggle="modal">добавить</a></small></sup></h3>
+            <table>
+                <thead>
+                    <tr><th>счет</th><th>остаток</th></tr>
+                </thead>
+                {% for account in accounts %}
+                    <tr>
+                        <td>{{ account.name }}</td>
+                        <td style="text-align: right;">{{ account.amount }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block modals %}
+    <div class="modal hide fade" id="newAccount">
+        <form class="form-horizontal" action="{% url 'core:add_account' %}" method="POST">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Добавить счет</h3>
+        </div>
+        <div class="modal-body">
+            {% csrf_token %}
+            {% for field in account_form %}
+            <div class="control-group">
+                <label class="control-label">{{ field.label_tag }}</label>
+                <div class="controls">{{ field }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="modal-footer">
+            <a href="#" data-dismiss="modal" class="btn">Отменить</a>
+            <button type="submit" class="btn btn-primary">Добавить</button>
+        </div>
+        </form>
+    </div>
+{% endblock modals %}

@@ -2,7 +2,13 @@
 
 {% block content %}
     <div class="row">
-        <div class="span9">
+        <div class="span10">
+            <h3>
+                Люди
+                <sup><small>
+                    <a href="#newPerson" title="добавить сотрудника" data-toggle="modal">добавить</a>
+                </small></sup>
+            </h3>
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -25,7 +31,7 @@
                             </a>
                         </td>
                         <td>{{ person.position }}</td>
-                        <td>{{ person.salary }}</td>
+                        <td>{{ person.salary.active }}</td>
                         <td>{{ person.works_from }}</td>
                         <td>-</td>
                         <td>{{ person.is_active|yesno:"С нами,Без нас" }}</td>
@@ -34,17 +40,17 @@
                 </tbody>
             </table>
         </div>
-        <div class="span1"><a href="{% url 'core:add_person' %}" title="добавить сотрудника" data-toggle="modal">добавить</a></div>
     </div>
 {% endblock content %}
 {% block modals %}
     <div class="modal hide fade" id="newPerson">
+        <form class="form-horizontal" action="{% url 'core:add_person' %}" method="POST">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h3>Добавление сотрудника</h3>
         </div>
         <div class="modal-body">
-            <form class="form-horizontal">
+
                 {% csrf_token %}
                 {% for field in person_form %}
                 <div class="control-group">
@@ -52,12 +58,11 @@
                     <div class="controls">{{ field }}</div>
                 </div>
                 {% endfor %}
-            </form>
-            <p>тут что-нибудь будет &hellip;</p>
         </div>
         <div class="modal-footer">
             <a href="#" data-dismiss="modal" class="btn">Отменить</a>
-            <a href="#" class="btn btn-primary">Добавить</a>
+            <button type="submit" class="btn btn-primary">Добавить</button>
         </div>
+        </form>
     </div>
 {% endblock modals %}
