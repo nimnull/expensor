@@ -6,8 +6,8 @@ from django.core.urlresolvers import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView, ListView, edit, DetailView
 
-from .forms import PersonForm
-from .models import Person
+from .forms import AccountForm, PersonForm
+from .models import Person, Account
 
 
 class AuthRequiredMixin(object):
@@ -21,8 +21,24 @@ class ActionView(AuthRequiredMixin, TemplateView):
     template_name = 'core/actions.html'
 
 
+class SettingsView(AuthRequiredMixin, TemplateView):
+    template_name = 'core/settings.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(SettingsView, self).get_context_data(**kwargs)
+        context['accounts'] = Account.objects.all()
+        context['account_form'] = AccountForm()
+        return context
+
+
 class DashboardView(AuthRequiredMixin, TemplateView):
     template_name = 'core/dashboard.html'
+
+
+class AccountCreateView(edit.CreateView):
+    model = Account
+    form_class = AccountForm
+    success_url = reverse_lazy('core:settings')
 
 
 class PeopleView(AuthRequiredMixin, ListView):
@@ -30,16 +46,23 @@ class PeopleView(AuthRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(PeopleView, self).get_context_data(**kwargs)
+        context['person_form'] = PersonForm()
         return context
 
 
-class PersonDetail(DetailView):
+class PersonDetailView(DetailView):
     model = Person
+
+    def get_context_data(self, **kwargs):
+        # person = kwargs['object']
+        context = super(PersonDetailView, self).get_context_data(**kwargs)
+        return context
 
 
 class PersonEdit(AuthRequiredMixin, edit.CreateView):
     # template_name = 'core/person_form.html'
     model = Person
+    form_class = PersonForm
     success_url = reverse_lazy('core:people')
 
 
