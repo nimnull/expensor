@@ -2,8 +2,9 @@
 from __future__ import absolute_import
 
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views.generic import TemplateView, ListView
+from django.views.generic import TemplateView, ListView, edit, DetailView
 
 from .forms import PersonForm
 from .models import Person
@@ -29,18 +30,16 @@ class PeopleView(AuthRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(PeopleView, self).get_context_data(**kwargs)
-        context['person_form'] = PersonForm()
         return context
 
 
-class PeopleEdit(AuthRequiredMixin, TemplateView):
-    template_name = 'core/person_form.html'
+class PersonDetail(DetailView):
+    model = Person
 
 
-    def get(self, request, *args, **kwargs):
-        person_id = kwargs.get('id')
-        if person_id is None:
-            return self.render_to_response({})
-        else:
-            return self.render_to_response({})
+class PersonEdit(AuthRequiredMixin, edit.CreateView):
+    # template_name = 'core/person_form.html'
+    model = Person
+    success_url = reverse_lazy('core:people')
+
 

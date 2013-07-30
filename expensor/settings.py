@@ -160,6 +160,10 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # SESSION_REDIS_PORT = 6379
 # SESSION_REDIS_DB = 1
 
+DEBUG_TOOLBAR_CONFIG = {
+    'INTERCEPT_REDIRECTS': False,
+}
+
 LOGIN_REDIRECT_URL = 'core:dashboard'
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
