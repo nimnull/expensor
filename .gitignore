@@ -6,3 +6,6 @@
 .idea
 # ignoring collected static files
 expensor/static/
+
+# ignoring temporary db
+*.db
