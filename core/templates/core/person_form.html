@@ -1,0 +1,11 @@
+{% extends "core/inner_base.html" %}
+
+{% block content %}
+    <form method="POST" action=".">
+        {% csrf_token %}
+    <ul class="unstyled">
+        {{ form.as_ul }}
+        <li><button class="btn" type="submit">Добавить</button></li>
+    </ul>
+    </form>
+{% endblock content %}
