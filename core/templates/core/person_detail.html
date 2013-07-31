@@ -14,12 +14,42 @@
             </dl>
         </div>
         <div class="span3">
+            <p>На сегодня — {{ person.salary|default:"не установлено" }} <a href="#addSalary" data-toggle="modal">изменить</a></p>
+            <h4>Зарплатный план:</h4>
             <ul class="unstyled">
-                <li><a href="#">изменить ставку</a></li>
-                {% for salary in person.salary.all %}
-                <li>{{ salary.active_from }} {{ salary.amount }}</li>
+                {% for salary in person.salaries.all %}
+                    {% if salary == person.salary %}
+                        <li><b>{{ salary.active_from }} &ndash; {{ salary.amount }}</b></li>
+                    {% else %}
+                        <li>{{ salary.active_from }} &ndash; {{ salary.amount }}</li>
+                    {% endif %}
                 {% endfor %}
             </ul>
         </div>
     </div>
 {% endblock content %}
+
+{% block modals %}
+    <div class="modal hide fade" id="addSalary">
+        <form class="form-horizontal" action="{% url 'core:add_salary' %}" method="POST">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Изменить ставку</h3>
+        </div>
+        <div class="modal-body">
+
+                {% csrf_token %}
+                {% for field in salary_form %}
+                <div class="control-group">
+                    <label class="control-label" for="inputEmail">{{ field.label_tag }}</label>
+                    <div class="controls">{{ field }}</div>
+                </div>
+                {% endfor %}
+        </div>
+        <div class="modal-footer">
+            <a href="#" data-dismiss="modal" class="btn">Отменить</a>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+        </div>
+        </form>
+    </div>
+{% endblock modals %}

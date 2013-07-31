@@ -2,6 +2,7 @@
 from __future__ import absolute_import
 from datetime import datetime
 from decimal import Decimal
+from django.core.urlresolvers import reverse
 
 from django.core.validators import MinValueValidator
 from django.db import models
@@ -43,9 +44,15 @@ class Person(models.Model):
         def inactive(self):
             return self.filter(is_active=False)
 
+    def __unicode__(self):
+        return self.full_name
+
+    def get_absolute_url(self):
+        return reverse('core:person', kwargs={'pk': self.pk})
+
     @property
     def salary(self):
-        return Salary.objects.filter(person=self).latest('active_from')
+        return Salary.objects.filter(person=self, active_from__lte=datetime.now).latest('active_from')
 
     @property
     def full_name(self):
@@ -60,14 +67,20 @@ class Salary(models.Model):
 
     objects = QuerySetManager()
 
+    class Meta:
+        # get_latest_by = '-active_from'
+        ordering = ('-active_from', )
+
     class QuerySet(QuerySet):
 
         def active(self):
             return self.filter(active_from__lte=datetime.now).latest()
 
-    class Meta:
-        get_latest_by = 'active_from'
+    def __unicode__(self):
+        return self.amount
 
+    def get_absolute_url(self):
+        return reverse('core:person', kwargs={'pk': self.person.pk})
 
 class Account(models.Model):
     name = models.CharField(max_length=255)

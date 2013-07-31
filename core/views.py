@@ -6,8 +6,8 @@ from django.core.urlresolvers import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView, ListView, edit, DetailView
 
-from .forms import AccountForm, PersonForm
-from .models import Person, Account
+from .forms import AccountForm, PersonForm, SalaryForm
+from .models import Person, Account, Salary
 
 
 class AuthRequiredMixin(object):
@@ -54,8 +54,9 @@ class PersonDetailView(DetailView):
     model = Person
 
     def get_context_data(self, **kwargs):
-        # person = kwargs['object']
+        person = kwargs['object']
         context = super(PersonDetailView, self).get_context_data(**kwargs)
+        context['salary_form'] = SalaryForm(initial={'person': person})
         return context
 
 
@@ -63,6 +64,8 @@ class PersonEdit(AuthRequiredMixin, edit.CreateView):
     # template_name = 'core/person_form.html'
     model = Person
     form_class = PersonForm
-    success_url = reverse_lazy('core:people')
 
 
+class SalaryAddView(AuthRequiredMixin, edit.CreateView):
+    model = Salary
+    form_class = SalaryForm

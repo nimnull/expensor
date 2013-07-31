@@ -2,7 +2,8 @@ from __future__ import absolute_import
 
 from django.conf.urls import patterns, url
 from .views import (PeopleView, DashboardView, PersonEdit, PersonDetailView,
-                    SettingsView, AccountCreateView)
+                    SettingsView, AccountCreateView, SalaryAddView)
+
 
 urlpatterns = patterns('core.views',
     url(r'^dashboard/$', DashboardView.as_view(), name='dashboard'),
@@ -13,6 +14,7 @@ urlpatterns = patterns('core.views',
     url(r'^person/add/$', PersonEdit.as_view(), name='add_person'),
     url(r'^person/edit/(?P<pk>\d+)$', PersonEdit.as_view(), name='edit_person'),
 
-    url(r'^account/add/$', AccountCreateView.as_view(), name='add_account'),
+    url(r'^salary/add/$', SalaryAddView.as_view(), name='add_salary'),
 
+    url(r'^account/add/$', AccountCreateView.as_view(), name='add_account'),
 )
