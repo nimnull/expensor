@@ -53,7 +53,7 @@ class Person(models.Model):
 
 
 class Salary(models.Model):
-    person = models.ForeignKey(Person, related_name='salary')
+    person = models.ForeignKey(Person, related_name='salaries')
     amount = models.DecimalField(decimal_places=2, max_digits=10)
     created_at = models.DateTimeField(default=datetime.now)
     active_from = models.DateField(default=datetime.now)
@@ -73,3 +73,6 @@ class Account(models.Model):
     name = models.CharField(max_length=255)
     amount = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     comment = models.TextField(blank=True, null=True)
+
+    def __unicode__(self):
+        return self.name
