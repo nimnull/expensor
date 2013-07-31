@@ -8,16 +8,20 @@ class PersonForm(forms.ModelForm):
 
     class Meta:
         model = Person
+        exclude = ('notes',)
 
 
 class AccountForm(forms.ModelForm):
 
     class Meta:
         model = Account
-        exclude = ('amount',)
+        exclude = ('amount', 'comment')
 
 
 class SalaryForm(forms.ModelForm):
 
     class Meta:
         model = Salary
+        widgets = {
+            'person': forms.HiddenInput
+        }

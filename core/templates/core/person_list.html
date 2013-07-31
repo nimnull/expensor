@@ -31,7 +31,7 @@
                             </a>
                         </td>
                         <td>{{ person.position }}</td>
-                        <td>{{ person.salary.active }}</td>
+                        <td>{{ person.salary|default:"n/a" }}</td>
                         <td>{{ person.works_from }}</td>
                         <td>-</td>
                         <td>{{ person.is_active|yesno:"С нами,Без нас" }}</td>

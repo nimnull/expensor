@@ -82,10 +82,18 @@ class Salary(models.Model):
     def get_absolute_url(self):
         return reverse('core:person', kwargs={'pk': self.person.pk})
 
+
 class Account(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(u'название', max_length=255)
     amount = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     comment = models.TextField(blank=True, null=True)
+
+    def __unicode__(self):
+        return self.name
+
+
+class ExpenseCategory(models.Model):
+    name = models.CharField(u'название', max_length=255)
 
     def __unicode__(self):
         return self.name
