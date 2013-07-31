@@ -1,7 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import
 from django import forms
-from .models import Person, Account, Salary
+from .models import Person, Account, Salary, ExpenseCategory
 
 
 class PersonForm(forms.ModelForm):
@@ -25,3 +25,9 @@ class SalaryForm(forms.ModelForm):
         widgets = {
             'person': forms.HiddenInput
         }
+
+
+class ExpenseCategoryForm(forms.ModelForm):
+
+    class Meta:
+        model = ExpenseCategory

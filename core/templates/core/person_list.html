@@ -42,7 +42,9 @@
         </div>
     </div>
 {% endblock content %}
+
 {% block modals %}
+    <!-- person form -->
     <div class="modal hide fade" id="newPerson">
         <form class="form-horizontal" action="{% url 'core:add_person' %}" method="POST">
         <div class="modal-header">

@@ -6,8 +6,8 @@ from django.core.urlresolvers import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView, ListView, edit, DetailView
 
-from .forms import AccountForm, PersonForm, SalaryForm
-from .models import Person, Account, Salary
+from .forms import AccountForm, PersonForm, SalaryForm, ExpenseCategoryForm
+from .models import Person, Account, Salary, ExpenseCategory
 
 
 class AuthRequiredMixin(object):
@@ -26,8 +26,14 @@ class SettingsView(AuthRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(SettingsView, self).get_context_data(**kwargs)
-        context['accounts'] = Account.objects.all()
-        context['account_form'] = AccountForm()
+
+        context.update({
+            'accounts': Account.objects.all(),
+            'account_form': AccountForm(),
+            'expense_categories': ExpenseCategory.objects.all(),
+            'expense_category_form': ExpenseCategoryForm()
+        })
+
         return context
 
 
@@ -41,12 +47,18 @@ class AccountCreateView(edit.CreateView):
     success_url = reverse_lazy('core:settings')
 
 
+class ExpenseCategoryAddView(AuthRequiredMixin, edit.CreateView):
+    model = ExpenseCategory
+    success_url = reverse_lazy('core:settings')
+
+
 class PeopleView(AuthRequiredMixin, ListView):
     model = Person
 
     def get_context_data(self, **kwargs):
         context = super(PeopleView, self).get_context_data(**kwargs)
         context['person_form'] = PersonForm()
+
         return context
 
 
@@ -57,6 +69,7 @@ class PersonDetailView(DetailView):
         person = kwargs['object']
         context = super(PersonDetailView, self).get_context_data(**kwargs)
         context['salary_form'] = SalaryForm(initial={'person': person})
+
         return context
 
 
