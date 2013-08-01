@@ -12,6 +12,17 @@
                 </small></sup>
             </h3>
             <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>цель</th>
+                        <th>дата</th>
+                        <th>категория</th>
+                        <th>сумма</th>
+                        <th>валюта</th>
+                        <th>счет</th>
+                        <th></th>
+                    </tr>
+                </thead>
                 {% for trans in object_list %}
                     <tr>
                         <td>{{ trans.get_direction_display }}</td>
@@ -20,6 +31,7 @@
                         <td>{{ trans.amount }}</td>
                         <td>{{ trans.amount_src }} {{ trans.currency }}</td>
                         <td>{{ trans.account }}</td>
+                        <td><a href="#">+</a></td>
                     </tr>
                 {% endfor %}
             </table>

@@ -1,11 +1,12 @@
 from __future__ import absolute_import
 
 from django.conf.urls import patterns, url
-from .views import (PeopleView, DashboardView, PersonEdit, PersonDetailView,
-                    SettingsView, AccountCreateView, SalaryAddView,
-                    ExpenseCategoryAddView, CurrencyAddView,
-                    TransactionListView, IncomeAddView, ExpenseAddView,
-                    TransferAddView)
+from core.views.people import (PeopleView, PersonDetailView, PersonEdit,
+                               SalaryAddView)
+from core.views.settings import (DashboardView, SettingsView, AccountCreateView,
+                                 ExpenseCategoryAddView, CurrencyAddView)
+from core.views.transactions import (TransactionListView, IncomeAddView,
+                                     ExpenseAddView, TransferAddView)
 
 
 urlpatterns = patterns('core.views',
