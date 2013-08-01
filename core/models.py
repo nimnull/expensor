@@ -2,26 +2,20 @@
 from __future__ import absolute_import
 from datetime import datetime
 from decimal import Decimal
+from django.contrib.auth.models import User
+from django.contrib.contenttypes.generic import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models.query import QuerySet
 
-from . import DIRECTION_CHOICES
 from .managers import QuerySetManager
 
 
 class Action(models.Model):
     name = models.CharField(max_length=128)
-
-
-class Transaction(models.Model):
-    direction = models.SmallIntegerField(choices=DIRECTION_CHOICES,
-                                         db_index=True)
-    amount = models.DecimalField(decimal_places=2, max_digits=10,
-                                 validators=[MinValueValidator(Decimal(0))])
-    comment = models.TextField(blank=True, null=True)
 
 
 class Person(models.Model):
@@ -98,3 +92,66 @@ class ExpenseCategory(models.Model):
     def __unicode__(self):
         return self.name
 
+
+class Currency(models.Model):
+    name = models.CharField(u'название', max_length=255)
+    ratio = models.FloatField(u'коэффициент', default=1)
+    is_default = models.BooleanField(u'системная?', default=False)
+
+    class Meta:
+        verbose_name_plural = 'currencies'
+
+    def __unicode__(self):
+        return self.name
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+
+        if self.is_default:
+            Currency.objects.filter(is_default=True).update(is_default=False)
+
+        super(Currency, self).save(force_insert, force_update, using,
+                                   update_fields)
+
+    @classmethod
+    def default(cls):
+        return cls.objects.get(is_default=True)
+
+
+class Transaction(models.Model):
+
+    DIRECTION_IN = 1
+    DIRECTION_OUT = 2
+
+    DIRECTION_CHOICES = (
+        (DIRECTION_IN, u'приход'),
+        (DIRECTION_OUT, u'расход')
+    )
+
+    created_by = models.ForeignKey(User)
+    source = models.ForeignKey(Account, verbose_name=u'счёт')
+    category = models.ForeignKey(ExpenseCategory, verbose_name=u'тип',
+                                 null=True, blank=True)
+    person = models.ForeignKey(Person, verbose_name=u'сотрудник', null=True,
+                               blank=True)
+
+    direction = models.SmallIntegerField(choices=DIRECTION_CHOICES,
+                                         db_index=True)
+    amount = models.DecimalField(decimal_places=2, max_digits=10,
+                                 validators=[MinValueValidator(Decimal(0))])
+    ratio = models.FloatField(u'коэффициент', default=1)
+    amount_src = models.DecimalField(decimal_places=2, max_digits=10,
+                                     validators=[MinValueValidator(Decimal(0))])
+    bill_date = models.DateField(u'дата', default=datetime.now)
+    created_at = models.DateTimeField(auto_now=True, auto_now_add=True)
+
+    comment = models.TextField(blank=True, null=True)
+
+    class Meta:
+        ordering = ('-bill_date',)
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        self.amount = Decimal(self.ratio) * self.amount_src
+        return super(Transaction, self).save(force_insert, force_update, using,
+                                             update_fields)

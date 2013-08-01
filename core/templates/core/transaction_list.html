@@ -1,0 +1,83 @@
+{% extends "core/inner_base.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="span10">
+            <h3>
+                Транзакции
+                <sup><small>
+                    <a href="#newIncome" title="внести приход" data-toggle="modal">приход</a>
+                    <a href="#newExpense" title="внести расход" data-toggle="modal">расход</a>
+                </small></sup>
+            </h3>
+            <table class="table table-striped">
+                {% for trans in object_list %}
+                    <tr>
+                        <td>{{ trans.get_direction_display }}</td>
+                        <td>{{ trans.bill_date }}</td>
+                        <td>{{ trans.category|default:"n/a" }}</td>
+                        <td>{{ trans.amount }}</td>
+                        <td>{{ trans.source }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+{% endblock content %}
+
+
+{% block modals %}
+    <!-- expense form -->
+    <div class="modal hide fade" id="newExpense">
+        <form class="form-horizontal" action="{% url 'core:add_transaction' %}" method="POST">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Ввод расхода</h3>
+        </div>
+        <div class="modal-body">
+
+                {% csrf_token %}
+                {% for field in expense_form.hidden_fields %}
+                    {{ field }}
+                {% endfor %}
+                {% for field in expense_form.visible_fields %}
+                <div class="control-group">
+                    <label class="control-label" for="inputEmail">{{ field.label_tag }}</label>
+                    <div class="controls">{{ field }}</div>
+                </div>
+                {% endfor %}
+        </div>
+        <div class="modal-footer">
+            <a href="#" data-dismiss="modal" class="btn">Отменить</a>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+        </div>
+        </form>
+    </div>
+    <!-- income form -->
+    <div class="modal hide fade" id="newIncome">
+        <form class="form-horizontal" action="{% url 'core:add_transaction' %}" method="POST">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Ввод прихода</h3>
+        </div>
+        <div class="modal-body">
+
+                {% csrf_token %}
+                {% for field in income_form.hidden_fields %}
+                    {{ field }}
+                {% endfor %}
+                {% for field in income_form.visible_fields %}
+                <div class="control-group">
+                    <label class="control-label" for="inputEmail">{{ field.label_tag }}</label>
+                    <div class="controls">{{ field }}</div>
+                </div>
+                {% endfor %}
+        </div>
+        <div class="modal-footer">
+            <a href="#" data-dismiss="modal" class="btn">Отменить</a>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+        </div>
+        </form>
+    </div>
+{% endblock modals %}

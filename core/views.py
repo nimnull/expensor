@@ -6,8 +6,8 @@ from django.core.urlresolvers import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView, ListView, edit, DetailView
 
-from .forms import AccountForm, PersonForm, SalaryForm, ExpenseCategoryForm
-from .models import Person, Account, Salary, ExpenseCategory
+from .forms import AccountForm, PersonForm, SalaryForm, ExpenseCategoryForm, CurrencyForm, TransactionForm
+from .models import Person, Account, Salary, ExpenseCategory, Currency, Transaction
 
 
 class AuthRequiredMixin(object):
@@ -31,7 +31,9 @@ class SettingsView(AuthRequiredMixin, TemplateView):
             'accounts': Account.objects.all(),
             'account_form': AccountForm(),
             'expense_categories': ExpenseCategory.objects.all(),
-            'expense_category_form': ExpenseCategoryForm()
+            'expense_category_form': ExpenseCategoryForm(),
+            'currencies': Currency.objects.all(),
+            'currency_form': CurrencyForm()
         })
 
         return context
@@ -49,6 +51,12 @@ class AccountCreateView(edit.CreateView):
 
 class ExpenseCategoryAddView(AuthRequiredMixin, edit.CreateView):
     model = ExpenseCategory
+    success_url = reverse_lazy('core:settings')
+
+
+class CurrencyAddView(AuthRequiredMixin, edit.CreateView):
+    model = Currency
+    form_class = CurrencyForm
     success_url = reverse_lazy('core:settings')
 
 
@@ -74,7 +82,6 @@ class PersonDetailView(DetailView):
 
 
 class PersonEdit(AuthRequiredMixin, edit.CreateView):
-    # template_name = 'core/person_form.html'
     model = Person
     form_class = PersonForm
 
@@ -82,3 +89,29 @@ class PersonEdit(AuthRequiredMixin, edit.CreateView):
 class SalaryAddView(AuthRequiredMixin, edit.CreateView):
     model = Salary
     form_class = SalaryForm
+
+
+class TransactionListView(AuthRequiredMixin, ListView):
+    model = Transaction
+
+    def get_context_data(self, **kwargs):
+        context = super(TransactionListView, self).get_context_data(**kwargs)
+        initial = {'created_by': self.request.user}
+
+        initial.update({'direction': Transaction.DIRECTION_OUT})
+        context['expense_form'] = TransactionForm(initial=initial)
+
+        initial.update({'direction': Transaction.DIRECTION_IN})
+        context['income_form'] = TransactionForm(initial=initial)
+
+        return context
+
+
+class TransactionAddView(AuthRequiredMixin, edit.CreateView):
+    model = Transaction
+    success_url = reverse_lazy('core:transactions')
+    form_class = TransactionForm
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super(TransactionAddView, self).form_valid(form)
