@@ -6,8 +6,11 @@ from django.core.urlresolvers import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView, ListView, edit, DetailView
 
-from .forms import AccountForm, PersonForm, SalaryForm, ExpenseCategoryForm, CurrencyForm, TransactionForm
-from .models import Person, Account, Salary, ExpenseCategory, Currency, Transaction
+from .forms import (AccountForm, PersonForm, SalaryForm, ExpenseCategoryForm,
+                    CurrencyForm, TransferForm, IncomeTransactionForm,
+                    ExpenseTransactionForm)
+from .models import (Person, Account, Salary, ExpenseCategory, Currency,
+                     Transaction)
 
 
 class AuthRequiredMixin(object):
@@ -96,13 +99,13 @@ class TransactionListView(AuthRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(TransactionListView, self).get_context_data(**kwargs)
-        initial = {'created_by': self.request.user}
 
-        initial.update({'direction': Transaction.DIRECTION_OUT})
-        context['expense_form'] = TransactionForm(initial=initial)
+        initial = {'direction': Transaction.DIRECTION_OUT}
+        context['expense_form'] = ExpenseTransactionForm(initial=initial)
+        context['transfer_form'] = TransferForm(initial=initial)
 
-        initial.update({'direction': Transaction.DIRECTION_IN})
-        context['income_form'] = TransactionForm(initial=initial)
+        initial = {'direction': Transaction.DIRECTION_IN}
+        context['income_form'] = IncomeTransactionForm(initial=initial)
 
         return context
 
@@ -110,8 +113,29 @@ class TransactionListView(AuthRequiredMixin, ListView):
 class TransactionAddView(AuthRequiredMixin, edit.CreateView):
     model = Transaction
     success_url = reverse_lazy('core:transactions')
-    form_class = TransactionForm
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
         return super(TransactionAddView, self).form_valid(form)
+
+
+class IncomeAddView(TransactionAddView):
+    form_class = IncomeTransactionForm
+
+
+class ExpenseAddView(TransactionAddView):
+    form_class = ExpenseTransactionForm
+
+
+class TransferAddView(TransactionAddView):
+    form_class = TransferForm
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        form.instance.category = ExpenseCategory.objects.get(
+            direct_expense=False, is_transfer=True)
+        form.instance.direction = Transaction.DIRECTION_OUT
+
+        Transaction.create_acceptor(form.instance,
+                                    form.cleaned_data['account_dst'])
+        return super(TransferAddView, self).form_valid(form)

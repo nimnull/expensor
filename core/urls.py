@@ -3,7 +3,9 @@ from __future__ import absolute_import
 from django.conf.urls import patterns, url
 from .views import (PeopleView, DashboardView, PersonEdit, PersonDetailView,
                     SettingsView, AccountCreateView, SalaryAddView,
-                    ExpenseCategoryAddView, CurrencyAddView, TransactionListView, TransactionAddView)
+                    ExpenseCategoryAddView, CurrencyAddView,
+                    TransactionListView, IncomeAddView, ExpenseAddView,
+                    TransferAddView)
 
 
 urlpatterns = patterns('core.views',
@@ -25,6 +27,7 @@ urlpatterns = patterns('core.views',
     url(r'^currencies/add/$', CurrencyAddView.as_view(), name='add_currency'),
 
     url(r'^transactions/$', TransactionListView.as_view(), name='transactions'),
-    url(r'^transactions/add/$', TransactionAddView.as_view(),
-        name='add_transaction'),
+    url(r'^income/add/$', IncomeAddView.as_view(), name='add_income'),
+    url(r'^expense/add/$', ExpenseAddView.as_view(), name='add_expense'),
+    url(r'^transfer/add/$', TransferAddView.as_view(), name='add_transfer'),
 )

@@ -24,6 +24,7 @@ class SalaryForm(forms.ModelForm):
 
     class Meta:
         model = Salary
+        exclude = ('created_at',)
         widgets = {
             'person': forms.HiddenInput
         }
@@ -41,13 +42,36 @@ class CurrencyForm(forms.ModelForm):
         model = Currency
 
 
-class TransactionForm(forms.ModelForm):
-
-    ratio = forms.ChoiceField(label=u'валюта', choices=Currency.objects.values_list('ratio', 'name'))
+class IncomeTransactionForm(forms.ModelForm):
 
     class Meta:
         model = Transaction
-        exclude = ('amount', 'created_at', 'created_by',)
+        exclude = ('amount', 'created_at', 'created_by', 'person', 'category',
+                   'parent', 'ratio')
         widgets = {
             'direction': forms.HiddenInput
+        }
+
+
+class ExpenseTransactionForm(forms.ModelForm):
+    category = forms.ModelChoiceField(
+        queryset=ExpenseCategory.objects.filter(direct_expense=True))
+
+    class Meta(IncomeTransactionForm.Meta):
+        exclude = ('amount', 'created_at', 'created_by', 'person', 'parent',
+                   'ratio')
+
+
+class TransferForm(forms.ModelForm):
+    account = forms.ModelChoiceField(
+        label=u'источник',
+        queryset=Account.objects.all())
+    account_dst = forms.ModelChoiceField(
+        label=u'назначение',
+        queryset=Account.objects.all())
+
+    class Meta(IncomeTransactionForm.Meta):
+        widgets = {
+            'direction': forms.HiddenInput,
+            'category': forms.HiddenInput
         }

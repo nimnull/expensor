@@ -2,13 +2,12 @@
 from __future__ import absolute_import
 from datetime import datetime
 from decimal import Decimal
-from django.contrib.auth.models import User
-from django.contrib.contenttypes.generic import GenericForeignKey
-from django.contrib.contenttypes.models import ContentType
-from django.core.urlresolvers import reverse
 
+from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.db.models import Sum
 from django.db.models.query import QuerySet
 
 from .managers import QuerySetManager
@@ -29,6 +28,9 @@ class Person(models.Model):
     works_from = models.DateField(default=datetime.now)
 
     objects = QuerySetManager()
+
+    class Meta:
+        ordering = ('first_name', 'last_name')
 
     class QuerySet(QuerySet):
 
@@ -55,9 +57,9 @@ class Person(models.Model):
 
 class Salary(models.Model):
     person = models.ForeignKey(Person, related_name='salaries')
-    amount = models.DecimalField(decimal_places=2, max_digits=10)
+    amount = models.DecimalField(u'сумма', decimal_places=2, max_digits=10)
     created_at = models.DateTimeField(default=datetime.now)
-    active_from = models.DateField(default=datetime.now)
+    active_from = models.DateField(u'действует с', default=datetime.now)
 
     objects = QuerySetManager()
 
@@ -85,9 +87,23 @@ class Account(models.Model):
     def __unicode__(self):
         return self.name
 
+    @property
+    def balance(self):
+        income = self.transactions.filter(direction=Transaction.DIRECTION_IN).\
+            aggregate(Sum('amount'))['amount__sum'] or Decimal(0)
+        expense = self.transactions.filter(direction=Transaction.DIRECTION_OUT).\
+            aggregate(Sum('amount'))['amount__sum'] or Decimal(0)
+
+        return income - expense
+
 
 class ExpenseCategory(models.Model):
     name = models.CharField(u'название', max_length=255)
+    direct_expense = models.BooleanField(u'прямой расход', default=True)
+    is_transfer = models.BooleanField(u'перевод', default=False)
+
+    class Meta:
+        ordering = ('name',)
 
     def __unicode__(self):
         return self.name
@@ -129,18 +145,22 @@ class Transaction(models.Model):
     )
 
     created_by = models.ForeignKey(User)
-    source = models.ForeignKey(Account, verbose_name=u'счёт')
+    account = models.ForeignKey(Account, verbose_name=u'счёт',
+                                related_name='transactions')
     category = models.ForeignKey(ExpenseCategory, verbose_name=u'тип',
                                  null=True, blank=True)
     person = models.ForeignKey(Person, verbose_name=u'сотрудник', null=True,
                                blank=True)
+    parent = models.ForeignKey('self', verbose_name=u'связанная', null=True,
+                               blank=True)
+    currency = models.ForeignKey(Currency, verbose_name=u'валюта')
 
     direction = models.SmallIntegerField(choices=DIRECTION_CHOICES,
                                          db_index=True)
     amount = models.DecimalField(decimal_places=2, max_digits=10,
                                  validators=[MinValueValidator(Decimal(0))])
     ratio = models.FloatField(u'коэффициент', default=1)
-    amount_src = models.DecimalField(decimal_places=2, max_digits=10,
+    amount_src = models.DecimalField(u'сумма', decimal_places=2, max_digits=10,
                                      validators=[MinValueValidator(Decimal(0))])
     bill_date = models.DateField(u'дата', default=datetime.now)
     created_at = models.DateTimeField(auto_now=True, auto_now_add=True)
@@ -152,6 +172,25 @@ class Transaction(models.Model):
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
-        self.amount = Decimal(self.ratio) * self.amount_src
+        if self.pk is None:
+            self.set_amount(self.currency)
         return super(Transaction, self).save(force_insert, force_update, using,
                                              update_fields)
+
+    def set_amount(self, currency):
+        self.amount = Decimal(currency.ratio) * self.amount_src
+        return self
+
+    @classmethod
+    def create_acceptor(cls, transaction, account):
+        return cls.objects.create(
+            amount_src=transaction.amount_src,
+            ratio=transaction.ratio,
+            account=account,
+            direction=cls.DIRECTION_IN,
+            parent=transaction,
+            created_by=transaction.created_by,
+            category=transaction.category,
+            currency=transaction.currency,
+            bill_date=transaction.bill_date,
+        )
