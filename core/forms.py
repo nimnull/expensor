@@ -55,7 +55,8 @@ class IncomeTransactionForm(forms.ModelForm):
 
 class ExpenseTransactionForm(forms.ModelForm):
     category = forms.ModelChoiceField(
-        queryset=ExpenseCategory.objects.filter(direct_expense=True))
+        queryset=ExpenseCategory.objects.filter(direct_expense=True,
+                                                is_transfer=False))
 
     class Meta(IncomeTransactionForm.Meta):
         exclude = ('amount', 'created_at', 'created_by', 'person', 'parent',
@@ -75,3 +76,20 @@ class TransferForm(forms.ModelForm):
             'direction': forms.HiddenInput,
             'category': forms.HiddenInput
         }
+
+
+class CommissionForm(forms.ModelForm):
+
+    class Meta:
+        model = Transaction
+        fields = ('currency', 'amount_src')
+
+
+class PaymentForm(forms.ModelForm):
+    account = forms.ModelChoiceField(
+        label=u'источник',
+        queryset=Account.objects.all())
+
+    class Meta:
+        model = Transaction
+        fields = ('account', 'currency', 'amount_src')

@@ -108,6 +108,18 @@ class ExpenseCategory(models.Model):
     def __unicode__(self):
         return self.name
 
+    @classmethod
+    def get_commission(cls):
+        return cls.objects.get(direct_expense=True, is_transfer=True)
+
+    @classmethod
+    def get_transfer(cls):
+        return cls.objects.get(direct_expense=False, is_transfer=True)
+
+    @classmethod
+    def get_payment(cls):
+        return cls.objects.get(direct_expense=False, is_transfer=False)
+
 
 class Currency(models.Model):
     name = models.CharField(u'название', max_length=255)
@@ -152,7 +164,7 @@ class Transaction(models.Model):
     person = models.ForeignKey(Person, verbose_name=u'сотрудник', null=True,
                                blank=True)
     parent = models.ForeignKey('self', verbose_name=u'связанная', null=True,
-                               blank=True)
+                               blank=True, related_name='children')
     currency = models.ForeignKey(Currency, verbose_name=u'валюта')
 
     direction = models.SmallIntegerField(choices=DIRECTION_CHOICES,
@@ -171,7 +183,7 @@ class Transaction(models.Model):
         ordering = ('-bill_date',)
 
     def __unicode__(self):
-        return "{0.bill_date} {0.amount}".format(self)
+        return "{0.id} {0.bill_date} {0.amount}".format(self)
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
@@ -186,14 +198,15 @@ class Transaction(models.Model):
 
     @classmethod
     def create_acceptor(cls, transaction, account):
-        return cls.objects.create(
+        connected = cls.objects.create(
             amount_src=transaction.amount_src,
             ratio=transaction.ratio,
             account=account,
             direction=cls.DIRECTION_IN,
-            parent=transaction,
             created_by=transaction.created_by,
             category=transaction.category,
             currency=transaction.currency,
             bill_date=transaction.bill_date,
         )
+        transaction.children.add(connected)
+        return connected

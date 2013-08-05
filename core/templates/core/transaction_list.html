@@ -6,9 +6,9 @@
             <h3>
                 Транзакции
                 <sup><small>
-                    <a href="#newIncome" title="внести приход" data-toggle="modal">приход</a>
-                    <a href="#newExpense" title="внести расход" data-toggle="modal">расход</a>
-                    <a href="#newTransfer" title="перевод" data-toggle="modal">перевод</a>
+                    <a href="#newIncome" title="внести приход" data-toggle="modal"><i class="icon-plus"></i></a>
+                    <a href="#newExpense" title="внести расход" data-toggle="modal"><i class="icon-minus"></i></a>
+                    <a href="#newTransfer" title="перевод" data-toggle="modal"><i class="icon-retweet"></i></a>
                 </small></sup>
             </h3>
             <table class="table table-striped">
@@ -25,14 +25,33 @@
                 </thead>
                 {% for trans in object_list %}
                     <tr>
-                        <td>{{ trans.get_direction_display }}</td>
+                        <td>
+                            {% with direction=trans.direction %}{% include "core/direction.html" %}{% endwith %}
+                        </td>
                         <td>{{ trans.bill_date }}</td>
-                        <td>{{ trans.category|default:"n/a" }}</td>
+                        <td>{{ trans.person|default:trans.category|default:"n/a" }}</td>
                         <td>{{ trans.amount }}</td>
                         <td>{{ trans.amount_src }} {{ trans.currency }}</td>
                         <td>{{ trans.account }}</td>
-                        <td><a href="#">+</a></td>
+                        <td>
+                            <a data-action="add-commission" data-target="{% url 'core:add_comission' pk=trans.id %}" href="#addCommission">
+                                <i class="icon-shopping-cart"></i>
+                            </a>
+                        </td>
                     </tr>
+                    {% for child in trans.children.all %}
+                        <tr style="font-size:0.8em;">
+                            <td></td>
+                            <td>
+                                {% with direction=child.direction %}{% include "core/direction.html" %}{% endwith %}
+                            </td>
+                            <td>{{ child.category|default:"n/a"|lower }}</td>
+                            <td>{{ child.amount }}</td>
+                            <td>{{ child.amount_src }} {{ child.currency}}</td>
+                            <td>{{ child.account }}</td>
+                            <td colspan="2"></td>
+                        </tr>
+                    {% endfor %}
                 {% endfor %}
             </table>
         </div>
@@ -53,4 +72,12 @@
     {% with action_id='newTransfer' action_url='core:add_transfer' action_title='Перевод' action_form=transfer_form %}
         {% include "core/modal_form.html" %}
     {% endwith %}
+    {% with action_id='addCommission' action_url='core:transactions' action_title='Комиссия' action_form=commission_form %}
+        {% include "core/modal_form.html" %}
+    {% endwith %}
 {% endblock modals %}
+
+{% block extra_js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/commission_form.js"></script>
+{% endblock extra_js %}

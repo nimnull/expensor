@@ -1,5 +1,5 @@
 from django.views.generic import ListView, DetailView, edit
-from core.forms import PersonForm, SalaryForm
+from core.forms import PersonForm, SalaryForm, PaymentForm
 from core.models import Person, Salary
 from core.views.base import AuthRequiredMixin
 
@@ -12,7 +12,7 @@ class PeopleView(AuthRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(PeopleView, self).get_context_data(**kwargs)
         context['person_form'] = PersonForm()
-
+        context['payment_form'] = PaymentForm()
         return context
 
 

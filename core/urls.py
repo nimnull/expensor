@@ -6,7 +6,8 @@ from core.views.people import (PeopleView, PersonDetailView, PersonEdit,
 from core.views.settings import (DashboardView, SettingsView, AccountCreateView,
                                  ExpenseCategoryAddView, CurrencyAddView)
 from core.views.transactions import (TransactionListView, IncomeAddView,
-                                     ExpenseAddView, TransferAddView)
+                                     ExpenseAddView, TransferAddView,
+                                     CommissionAddView, PaymentAddView)
 
 
 urlpatterns = patterns('core.views',
@@ -31,4 +32,8 @@ urlpatterns = patterns('core.views',
     url(r'^income/add/$', IncomeAddView.as_view(), name='add_income'),
     url(r'^expense/add/$', ExpenseAddView.as_view(), name='add_expense'),
     url(r'^transfer/add/$', TransferAddView.as_view(), name='add_transfer'),
+    url(r'^comission/add/(?P<pk>\d+)$', CommissionAddView.as_view(),
+        name='add_comission'),
+    url(r'^payment/add/(?P<pk>\d+)$', PaymentAddView.as_view(),
+        name='add_payment'),
 )
