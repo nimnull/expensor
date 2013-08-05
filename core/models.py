@@ -170,6 +170,9 @@ class Transaction(models.Model):
     class Meta:
         ordering = ('-bill_date',)
 
+    def __unicode__(self):
+        return "{0.bill_date} {0.amount}".format(self)
+
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
         if self.pk is None:
