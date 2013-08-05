@@ -35,7 +35,7 @@
                         </td>
                         <td>{{ person.position }}</td>
                         <td>
-                            {% if user.is_staff1 %}
+                            {% if user.is_staff %}
                                 {{ person.salary|default:"n/a" }}
                             {% else %}
                                 секрет

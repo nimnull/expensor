@@ -13,6 +13,7 @@
                 <dt>С нами с</dt><dd>{{ person.works_from }}</dd>
             </dl>
         </div>
+        {% if user.is_staff %}
         <div class="span3">
             <p>На сегодня — {{ person.salary|default:"не установлено" }} <a href="#addSalary" data-toggle="modal">изменить</a></p>
             <h4>Зарплатный план:</h4>
@@ -26,6 +27,9 @@
                 {% endfor %}
             </ul>
         </div>
+        {% else %}
+            <div class="span3">Отдам кота, недорого!</div>
+        {% endif %}
     </div>
 {% endblock content %}
 
