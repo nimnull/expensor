@@ -7,7 +7,7 @@ register = template.Library()
 
 @register.filter
 def currency(value, currency_name):
-    """Removes all values of arg from the given string"""
+    """Calculating and formating amount in specific currency"""
     try:
         currency_obj = Currency.objects.get(name=currency_name)
     except Currency.DoesNotExist:
