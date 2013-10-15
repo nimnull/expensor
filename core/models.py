@@ -122,7 +122,7 @@ class ExpenseCategory(models.Model):
 
 
 class Currency(models.Model):
-    name = models.CharField(u'название', max_length=255)
+    name = models.CharField(u'название', max_length=255, unique=True)
     ratio = models.FloatField(u'коэффициент', default=1)
     is_default = models.BooleanField(u'системная?', default=False)
 

@@ -1,4 +1,6 @@
 {% extends "core/inner_base.html" %}
+{% load currency_filter %}
+
 
 {% block content %}
     <div class="row">
@@ -9,6 +11,7 @@
                     <tr>
                         <td>{{ account.name }}</td>
                         <td style="text-align: right;">{{ account.balance }}</td>
+                        <td style="text-align: right;">{{ account.balance|currency:'HRN' }}</td>
                     </tr>
                 {% endfor %}
             </table>
