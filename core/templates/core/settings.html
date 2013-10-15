@@ -4,7 +4,7 @@
 
 {% block content %}
     <div class="row">
-        <div class="span3">
+        <div class="span4">
             <h3>Счета <sup><small><a href="#newAccount" data-toggle="modal">добавить</a></small></sup></h3>
             <table>
                 {% for account in accounts %}
@@ -16,14 +16,21 @@
                 {% endfor %}
             </table>
         </div>
-        <div class="span3">
+        <div class="span4">
             <h3>Типы расходов <sup><small><a href="#newExpenseCategory" data-toggle="modal">добавить</a></small></sup></h3>
             <table>
                 {% for e_cat in expense_categories %}
-                    <tr><td>{{ e_cat.name }}</td></tr>
+                    <tr>
+                        <td>{{ e_cat.name }}</td>
+                        <td style="text-align: right;">{{ e_cat.get_total }}</td>
+                        <td style="text-align: right;">{{ e_cat.get_total|currency:'HRN' }}</td>
+
+                    </tr>
                 {% endfor %}
             </table>
         </div>
+    </div>
+    <div class="row">
         <div class="span3">
             <h3>Валюта <sup><small><a href="#newCurrency" data-toggle="modal">добавить</a></small></sup></h3>
             <table>
