@@ -48,7 +48,13 @@ class Person(models.Model):
 
     @property
     def salary(self):
-        return Salary.objects.filter(person=self, active_from__lte=datetime.now).latest('active_from')
+        salaries = Salary.objects.filter(person=self,
+                                         active_from__lte=datetime.now)
+        if salaries.count() > 0:
+            rv = salaries.latest('active_from')
+        else:
+            rv = Salary(amount=Decimal(0.00))
+        return rv
 
     @property
     def full_name(self):
