@@ -1,0 +1,40 @@
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Имя</th>
+            <th>Позиция</th>
+            {% if user.is_staff %}
+            <th>З/П</th>
+            {% endif %}
+            <th>С нами с</th>
+            <th>Долг</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for person in persons %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>
+                <a href="{% url 'core:person' pk=person.id %}" title="профиль">
+                    {{ person.first_name }} {{ person.last_name }}
+                </a>
+            </td>
+            <td>{{ person.position }}</td>
+            <td>
+                {% if user.is_staff %}
+                    {{ person.salary|default:"n/a" }}
+                {% else %}
+                    секрет
+                {% endif %}
+            </td>
+            <td>{{ person.works_from }}</td>
+            <td>-</td>
+            <td>{{ person.is_active|yesno:"<i class='icon-ok-circle'></i>,<i class='icon-ban-circle'></i>"|safe }}</td>
+            <td><a data-action="add-payment" data-target="{% url 'core:add_payment' pk=person.id %}" href="#addPayment"><i class="icon-gift"></i></a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

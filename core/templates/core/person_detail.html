@@ -16,16 +16,22 @@
         </div>
         {% if user.is_staff %}
         <div class="span3">
-            <p>На сегодня — {{ person.salary|default:"не установлено" }} <a href="#addSalary" data-toggle="modal">изменить</a></p>
-            <h4>Зарплатный план:</h4>
-
+            <h4>Зарплатный план: <small><a href="#addSalary" data-toggle="modal">изменить</a></small></h4>
             <ul class="unstyled">
                 {% for salary in person.salaries.all %}
                     {% if salary == person.salary %}
-                        <li><b>{{ salary.active_from }} &ndash; {{ salary.amount }}</b></li>
+                        <li><b>{{ salary.active_from }} &ndash; {{ salary.amount }}</b> — сейчас</li>
                     {% else %}
                         <li>{{ salary.active_from }} &ndash; {{ salary.amount }}</li>
                     {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="span3">
+            <h4>Выплаты:</h4>
+            <ul class="unstyled">
+                {% for transaction in person.transactions.all %}
+                <li>{{ transaction.bill_date }} &mdash; <a href="#" data-toggle="tooltip" title="{{ transaction.comment }}">${{ transaction.amount }}</a></li>
                 {% endfor %}
             </ul>
         </div>

@@ -10,46 +10,24 @@
                     <a href="#newPerson" title="добавить сотрудника" data-toggle="modal"><i class="icon-plus"></i></a>
                 </small></sup>
             </h3>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Имя</th>
-                        <th>Позиция</th>
-                        {% if user.is_staff %}
-                        <th>З/П</th>
-                        {% endif %}
-                        <th>С нами с</th>
-                        <th>Долг</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for person in object_list %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>
-                            <a href="{% url 'core:person' pk=person.id %}" title="профиль">
-                                {{ person.first_name }} {{ person.last_name }}
-                            </a>
-                        </td>
-                        <td>{{ person.position }}</td>
-                        <td>
-                            {% if user.is_staff %}
-                                {{ person.salary|default:"n/a" }}
-                            {% else %}
-                                секрет
-                            {% endif %}
-                        </td>
-                        <td>{{ person.works_from }}</td>
-                        <td>-</td>
-                        <td>{{ person.is_active|yesno:"<i class='icon-ok-circle'></i>,<i class='icon-ban-circle'></i>"|safe }}</td>
-                        <td><a data-action="add-payment" data-target="{% url 'core:add_payment' pk=person.id %}" href="#addPayment"><i class="icon-gift"></i></a></td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div class="tabbable">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#empl-active" data-toggle="tab">С нами</a></li>
+                    <li><a href="#empl-inactive" data-toggle="tab">Без нас</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="empl-active">
+                        {% with object_list.active as persons %}
+                            {% include "core/person_list_table.html" %}
+                        {% endwith %}
+                    </div>
+                    <div class="tab-pane" id="empl-inactive">
+                        {% with object_list.inactive as persons %}
+                            {% include "core/person_list_table.html" %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock content %}
