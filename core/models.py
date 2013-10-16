@@ -120,9 +120,12 @@ class ExpenseCategory(models.Model):
     def get_payment(cls):
         return cls.objects.get(direct_expense=False, is_transfer=False)
 
+    def get_total(self):
+        total = self.transactions.aggregate(Sum('amount'))['amount__sum']
+        return total if total is not None else 0
 
 class Currency(models.Model):
-    name = models.CharField(u'название', max_length=255)
+    name = models.CharField(u'название', max_length=255, unique=True)
     ratio = models.FloatField(u'коэффициент', default=1)
     is_default = models.BooleanField(u'системная?', default=False)
 
@@ -160,6 +163,7 @@ class Transaction(models.Model):
     account = models.ForeignKey(Account, verbose_name=u'счёт',
                                 related_name='transactions')
     category = models.ForeignKey(ExpenseCategory, verbose_name=u'тип',
+                                 related_name='transactions',
                                  null=True, blank=True)
     person = models.ForeignKey(Person, verbose_name=u'сотрудник', null=True,
                                blank=True)

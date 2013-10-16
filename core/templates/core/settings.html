@@ -1,28 +1,44 @@
 {% extends "core/inner_base.html" %}
+{% load currency_filter %}
+
 
 {% block content %}
     <div class="row">
-        <div class="span3">
-            <h3>Счета <sup><small><a href="#newAccount" data-toggle="modal">добавить</a></small></sup></h3>
+        <div class="span4">
+            <h3>Счета
+                <a href="#newAccount" title="добавить счет" data-toggle="modal"><i class="icon-plus"></i></a>
+            </h3>
             <table>
                 {% for account in accounts %}
                     <tr>
                         <td>{{ account.name }}</td>
                         <td style="text-align: right;">{{ account.balance }}</td>
+                        <td style="text-align: right;">{{ account.balance|currency:'HRN' }}</td>
                     </tr>
                 {% endfor %}
             </table>
         </div>
-        <div class="span3">
-            <h3>Типы расходов <sup><small><a href="#newExpenseCategory" data-toggle="modal">добавить</a></small></sup></h3>
+        <div class="span4">
+            <h3>Типы расходов
+                <a href="#newExpenseCategory" title="добавить тип расходов" data-toggle="modal"><i class="icon-plus"></i></a>
+            </h3>
             <table>
                 {% for e_cat in expense_categories %}
-                    <tr><td>{{ e_cat.name }}</td></tr>
+                    <tr>
+                        <td>{{ e_cat.name }}</td>
+                        <td style="text-align: right;">{{ e_cat.get_total }}</td>
+                        <td style="text-align: right;">{{ e_cat.get_total|currency:'HRN' }}</td>
+
+                    </tr>
                 {% endfor %}
             </table>
         </div>
+    </div>
+    <div class="row">
         <div class="span3">
-            <h3>Валюта <sup><small><a href="#newCurrency" data-toggle="modal">добавить</a></small></sup></h3>
+            <h3>Валюта
+                <a href="#newCurrency" title="добавить валюту" data-toggle="modal"><i class="icon-plus"></i></a>
+            </h3>
             <table>
                 {% for currency in currencies %}
                     <tr>

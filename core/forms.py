@@ -86,9 +86,8 @@ class CommissionForm(forms.ModelForm):
 
 
 class PaymentForm(forms.ModelForm):
-    account = forms.ModelChoiceField(
-        label=u'источник',
-        queryset=Account.objects.all())
+    account = forms.ModelChoiceField(label=u'источник',
+                                     queryset=Account.objects.all())
 
     class Meta:
         model = Transaction

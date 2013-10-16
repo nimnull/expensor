@@ -1,8 +1,9 @@
 {% extends "core/inner_base.html" %}
+{% load static %}
 
 {% block content %}
     <div class="row">
-        <div class="span10"><h3>{{ person.full_name }}</h3></div>
+        <div class="span10"><h3>{{ person.full_name }} <a data-action="add-payment" data-target="{% url 'core:add_payment' pk=person.id %}" href="#addPayment"><i class="icon-gift"></i></a></h3></div>
     </div>
     <div class="row">
         <div class="span3">
@@ -17,6 +18,7 @@
         <div class="span3">
             <p>На сегодня — {{ person.salary|default:"не установлено" }} <a href="#addSalary" data-toggle="modal">изменить</a></p>
             <h4>Зарплатный план:</h4>
+
             <ul class="unstyled">
                 {% for salary in person.salaries.all %}
                     {% if salary == person.salary %}
@@ -58,4 +60,14 @@
         </div>
         </form>
     </div>
+
+    {% with action_id='addPayment' action_url='core:people' action_title='Внести з/п' action_form=payment_form %}
+        {% include "core/modal_form.html" %}
+    {% endwith %}
 {% endblock modals %}
+
+
+{% block extra_js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/payment_form.js' %}"></script>
+{% endblock extra_js %}

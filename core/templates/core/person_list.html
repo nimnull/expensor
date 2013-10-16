@@ -1,4 +1,5 @@
 {% extends "core/inner_base.html" %}
+{% load static %}
 
 {% block content %}
     <div class="row">
@@ -65,5 +66,5 @@
 
 {% block extra_js %}
     {{ block.super }}
-    <script type="text/javascript" src="{{ STATIC_URL }}js/payment_form.js"></script>
+    <script type="text/javascript" src="{% static 'js/payment_form.js' %}"></script>
 {% endblock extra_js %}

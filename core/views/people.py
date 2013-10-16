@@ -1,6 +1,6 @@
 from django.views.generic import ListView, DetailView, edit
 from core.forms import PersonForm, SalaryForm, PaymentForm
-from core.models import Person, Salary
+from core.models import Person, Salary, Currency
 from core.views.base import AuthRequiredMixin
 
 __author__ = 'nimnull'
@@ -23,7 +23,8 @@ class PersonDetailView(DetailView):
         person = kwargs['object']
         context = super(PersonDetailView, self).get_context_data(**kwargs)
         context['salary_form'] = SalaryForm(initial={'person': person})
-
+        context['payment_form'] = PaymentForm(initial={'currency': Currency.default(),
+                                                       'amount_src': person.salary.amount})
         return context
 
 
