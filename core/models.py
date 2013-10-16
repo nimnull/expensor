@@ -166,7 +166,7 @@ class Transaction(models.Model):
                                  related_name='transactions',
                                  null=True, blank=True)
     person = models.ForeignKey(Person, verbose_name=u'сотрудник', null=True,
-                               blank=True)
+                               blank=True, related_name='transactions')
     parent = models.ForeignKey('self', verbose_name=u'связанная', null=True,
                                blank=True, related_name='children')
     currency = models.ForeignKey(Currency, verbose_name=u'валюта')
