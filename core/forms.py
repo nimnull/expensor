@@ -1,8 +1,8 @@
 # encoding: utf-8
 from __future__ import absolute_import
-from decimal import Decimal
+# from decimal import Decimal
 from django import forms
-from django.contrib.contenttypes.models import ContentType
+# from django.contrib.contenttypes.models import ContentType
 from .models import Person, Account, Salary, ExpenseCategory, Currency, Transaction, Candidate
 
 

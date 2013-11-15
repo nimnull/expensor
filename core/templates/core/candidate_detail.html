@@ -1,0 +1,56 @@
+{% extends "core/inner_base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="row">
+        <div class="span10"><h3>{{ candidate.full_name }} </h3></div>
+    </div>
+    <div class="row">
+        <div class="span3">
+            <dl>
+                <dt>Email</dt><dd>{{ candidate.email }}</dd>
+                <dt>Телефон</dt><dd>{{ candidate.phone }}</dd>
+            </dl>
+        </div>
+
+       <div class="span3">Отдам кота, недорого!</div>
+
+    </div>
+{% endblock content %}
+
+{% block modals %}
+    <div class="modal hide fade" id="addSalary">
+        <form class="form-horizontal" action="{% url 'core:add_salary' %}" method="POST">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Изменить ставку</h3>
+        </div>
+        <div class="modal-body">
+                {% csrf_token %}
+                {% for hidden in salary_form.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
+                {% for field in salary_form.visible_fields %}
+                <div class="control-group">
+                    <label class="control-label" for="inputEmail">{{ field.label_tag }}</label>
+                    <div class="controls">{{ field }}</div>
+                </div>
+                {% endfor %}
+        </div>
+        <div class="modal-footer">
+            <a href="#" data-dismiss="modal" class="btn">Отменить</a>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+        </div>
+        </form>
+    </div>
+
+    {% with action_id='addPayment' action_url='core:people' action_title='Внести з/п' action_form=payment_form %}
+        {% include "core/modal_form.html" %}
+    {% endwith %}
+{% endblock modals %}
+
+
+{% block extra_js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/payment_form.js' %}"></script>
+{% endblock extra_js %}
