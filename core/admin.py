@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Account, Person, Currency, ExpenseCategory, Transaction, Salary
+from .models import Account, Person, Currency, ExpenseCategory, Transaction, Salary, Candidate
 
 
 class AccountAdmin(admin.ModelAdmin):
@@ -18,6 +18,12 @@ class PersonAdmin(admin.ModelAdmin):
     inlines = [PersonSalaryInline]
 
 
+class CandidateAdmin(admin.ModelAdmin):
+    list_display = ('full_name', 'email', 'phone', 'title', 'status')
+
+  
+
+
 class TransactionAdmin(admin.ModelAdmin):
     list_display = ('account', 'bill_date', 'amount', 'amount_src', 'currency',
                     'direction', 'category',)
@@ -31,6 +37,7 @@ class ExpenseCategoryAdmin(admin.ModelAdmin):
 
 admin.site.register(Account, AccountAdmin)
 admin.site.register(Person, PersonAdmin)
+admin.site.register(Candidate, CandidateAdmin)
 admin.site.register(Currency)
 admin.site.register(ExpenseCategory, ExpenseCategoryAdmin)
 admin.site.register(Transaction, TransactionAdmin)

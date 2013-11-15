@@ -1,0 +1,66 @@
+{% extends "core/inner_base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="row">
+        <div class="span10">
+            <h3>
+                Люди
+                <sup><small>
+                    <a href="#newPerson" title="добавить сотрудника" data-toggle="modal"><i class="icon-plus"></i></a>
+                </small></sup>
+            </h3>
+            <div class="tabbable">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#qa" data-toggle="tab">QA</a></li>
+                    <li><a href="#python" data-toggle="tab">Python</a></li>
+                    <li><a href="#js" data-toggle="tab">JS</a></li>
+                    <li><a href="#html" data-toggle="tab">Html/CSS</a></li>
+                    <li><a href="#designer" data-toggle="tab">Designer</a></li>
+                </ul>    
+                <div class="tab-content">
+                    <div class="tab-pane active" id="qa">
+                        {% with object_list.qa as persons %}
+                            {% include "core/candidate_list_table.html" %}  
+                        {% endwith %}
+                    </div>
+                    <div class="tab-pane" id="python">
+                        {% with object_list.python as persons %}
+                            {% include "core/candidate_list_table.html" %}
+                        {% endwith %}
+                    </div>
+                    <div class="tab-pane" id="js">
+                        {% with object_list.js as persons %}
+                            {% include "core/candidate_list_table.html" %}
+                        {% endwith %}
+                    </div>
+                    <div class="tab-pane" id="html">
+                        {% with object_list.html as persons %}
+                            {% include "core/candidate_list_table.html" %}
+                        {% endwith %}
+                    </div>
+                    <div class="tab-pane" id="designer">
+                        {% with object_list.designer as persons %}
+                            {% include "core/candidate_list_table.html" %}
+                        {% endwith %}
+                    </div>                                                            
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block modals %}
+    <!-- person form -->
+    {% with action_id='newPerson' action_url='core:add_person' action_title='Добавление сотрудника' action_form=person_form %}
+        {% include "core/modal_form.html" %}
+    {% endwith %}
+    {% with action_id='addPayment' action_url='core:people' action_title='Внести з/п' action_form=payment_form %}
+        {% include "core/modal_form.html" %}
+    {% endwith %}
+{% endblock modals %}
+
+{% block extra_js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/payment_form.js' %}"></script>
+{% endblock extra_js %}

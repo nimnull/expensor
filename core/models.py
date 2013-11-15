@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 from __future__ import absolute_import
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from decimal import Decimal
 
 from django.contrib.auth.models import User
@@ -26,6 +27,8 @@ class Person(models.Model):
     notes = models.TextField(blank=True, null=True)
     is_active = models.BooleanField(db_index=True, default=False)
     works_from = models.DateField(default=datetime.now)
+    last_review = models.DateField(blank=True, null=True)
+    hospital = models.IntegerField(blank=True, null=True)
 
     objects = QuerySetManager()
 
@@ -47,6 +50,20 @@ class Person(models.Model):
         return reverse('core:person', kwargs={'pk': self.pk})
 
     @property
+    def full_name(self):
+        return u"{0.first_name} {0.last_name}".format(self)
+
+    @property
+    def vacation(self):       
+        period = datetime.now().date() - self.works_from        
+        return (period.days/30)*1.75
+
+    @property
+    def next_review(self):
+        if self.last_review:
+            return self.last_review + relativedelta(months=6)
+
+    @property
     def salary(self):
         salaries = Salary.objects.filter(person=self,
                                          active_from__lte=datetime.now)
@@ -57,8 +74,84 @@ class Person(models.Model):
         return rv
 
     @property
+    def salary_raise(self):
+        salaries = Salary.objects.filter(person=self,
+                                         active_from__lte=datetime.now)     
+        if salaries.count() > 1:
+            last = salaries[0].amount
+            previous = salaries[1].amount
+            rv = last-previous
+        else:
+            rv = 0
+        return rv
+
+  
+
+
+division = (    
+    ('1', 'QA'),
+    ('2', 'Python'),
+    ('3', 'JS'),
+    ('4', 'Html/CSS'),
+    ('5', 'Designer')
+    )
+
+status =  (    
+    ('1', u'Отказали'),
+    ('2', u'Сделали оффер/не принял'),
+    ('3', u'Вышел на работу'),
+    ('4', u'Бан-лист'),    
+    )
+
+
+class Candidate(models.Model):
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    email = models.EmailField(db_index=True)
+    phone = models.CharField(max_length=10)
+    division = models.CharField(max_length=5, choices=division, blank=True, null=True)
+    cv = models.URLField( blank=True, null=True)
+    interview = models.URLField( blank=True, null=True)
+    title = models.CharField(max_length=50,  blank=True, null=True)
+    status = models.CharField(max_length=5, choices=status, blank=True, null=True)
+    person = models.OneToOneField(Person, blank=True, null=True)
+
+    objects = QuerySetManager()
+
+    class Meta:
+        ordering = ('first_name', 'last_name')
+
+
+    class QuerySet(QuerySet):
+
+        def qa(self):
+            return self.filter(division='1')
+
+        def python(self):
+            return self.filter(division='2')
+
+        def js(self):
+            return self.filter(division='3')
+
+        def html(self):
+            return self.filter(division='4')
+
+        def designer(self):
+            return self.filter(division='5')            
+
+
+    def __unicode__(self):
+        return self.full_name
+
+    def get_absolute_url(self):
+        return reverse('core:candidate', kwargs={'pk': self.pk})
+
+    @property
     def full_name(self):
         return u"{0.first_name} {0.last_name}".format(self)
+
+
+
 
 
 class Salary(models.Model):

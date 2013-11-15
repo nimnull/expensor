@@ -4,11 +4,20 @@
             <th>#</th>
             <th>Имя</th>
             <th>Позиция</th>
-            {% if user.is_staff %}
             <th>З/П</th>
+            {% if user.is_staff %}           
             {% endif %}
             <th>С нами с</th>
             <th>Долг</th>
+
+            <th>Отпуск (дней)</th>
+            <th>Последнее ревью</th>
+            <th>Следующее ревью</th>
+            <th>Сумма повышения</th>
+            <th>Больничный</th>
+
+
+
             <th></th>
             <th></th>
         </tr>
@@ -32,6 +41,14 @@
             </td>
             <td>{{ person.works_from }}</td>
             <td>-</td>
+
+            <td>{{ person.vacation }}</td>
+            <td>{{ person.last_review|default:"-" }}</td>
+            <td>{{ person.next_review|default:"-" }}</td>
+            <td>{{ person.salary_raise }}</td>
+            <td>{{ person.hospital|default:"-" }}</td>
+
+
             <td>{{ person.is_active|yesno:"<i class='icon-ok-circle'></i>,<i class='icon-ban-circle'></i>"|safe }}</td>
             <td><a data-action="add-payment" data-target="{% url 'core:add_payment' pk=person.id %}" href="#addPayment"><i class="icon-gift"></i></a></td>
         </tr>
