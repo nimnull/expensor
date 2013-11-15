@@ -29,6 +29,7 @@ class Person(models.Model):
     works_from = models.DateField(default=datetime.now)
     last_review = models.DateField(blank=True, null=True)
     hospital = models.IntegerField(blank=True, null=True)
+    day_off = models.IntegerField(blank=True, null=True)
 
     objects = QuerySetManager()
 
@@ -109,7 +110,7 @@ class Candidate(models.Model):
     last_name = models.CharField(max_length=50)
     email = models.EmailField(db_index=True)
     phone = models.CharField(max_length=10)
-    division = models.CharField(max_length=5, choices=division, blank=True, null=True)
+    division = models.CharField(max_length=5, choices=division, default='2')
     cv = models.URLField( blank=True, null=True)
     interview = models.URLField( blank=True, null=True)
     title = models.CharField(max_length=50,  blank=True, null=True)
@@ -117,6 +118,24 @@ class Candidate(models.Model):
     person = models.OneToOneField(Person, blank=True, null=True)
 
     objects = QuerySetManager()
+
+
+    def save(self, *args, **kwargs):
+        super(Candidate, self).save(*args, **kwargs)
+
+        if self.status == '3' and not self.person:
+            if self.title:
+                position = self.title
+            else:
+                position = self.division
+                
+            person = Person(first_name=self.first_name, last_name=self.last_name,
+                email = self.email, phone = self.phone, position = position,
+                works_from = datetime.now().date(), last_review = datetime.now().date(),
+                is_active=True
+                )  
+            person.save()
+
 
     class Meta:
         ordering = ('first_name', 'last_name')

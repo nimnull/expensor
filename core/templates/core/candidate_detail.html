@@ -10,6 +10,7 @@
             <dl>
                 <dt>Email</dt><dd>{{ candidate.email }}</dd>
                 <dt>Телефон</dt><dd>{{ candidate.phone }}</dd>
+                <dt><a href="#editCandidate" title="Редактировать кандидата" data-toggle="modal">Редактировать</a></dt><dd></dd>
             </dl>
         </div>
 
@@ -19,34 +20,9 @@
 {% endblock content %}
 
 {% block modals %}
-    <div class="modal hide fade" id="addSalary">
-        <form class="form-horizontal" action="{% url 'core:add_salary' %}" method="POST">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h3>Изменить ставку</h3>
-        </div>
-        <div class="modal-body">
-                {% csrf_token %}
-                {% for hidden in salary_form.hidden_fields %}
-                    {{ hidden }}
-                {% endfor %}
-                {% for field in salary_form.visible_fields %}
-                <div class="control-group">
-                    <label class="control-label" for="inputEmail">{{ field.label_tag }}</label>
-                    <div class="controls">{{ field }}</div>
-                </div>
-                {% endfor %}
-        </div>
-        <div class="modal-footer">
-            <a href="#" data-dismiss="modal" class="btn">Отменить</a>
-            <button type="submit" class="btn btn-primary">Сохранить</button>
-        </div>
-        </form>
-    </div>
-
-    {% with action_id='addPayment' action_url='core:people' action_title='Внести з/п' action_form=payment_form %}
+    {% with action_id='editCandidate' action_url='core:add_candidate' action_title='Редактировать кандидата' action_form=person_form %}
         {% include "core/modal_form.html" %}
-    {% endwith %}
+    {% endwith %}  
 {% endblock modals %}
 
 

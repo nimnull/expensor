@@ -25,7 +25,6 @@ urlpatterns = patterns('core.views',
     url(r'^candidate/add/$', CandidateEdit.as_view(), name='add_candidate'),
     url(r'^candidate/edit/(?P<pk>\d+)$', CandidateEdit.as_view(), name='edit_candidate'),
 
-
     url(r'^salaries/add/$', SalaryAddView.as_view(), name='add_salary'),
 
     url(r'^accounts/add/$', AccountCreateView.as_view(), name='add_account'),

@@ -63,3 +63,8 @@ class CandidateDetailView(DetailView):
 class CandidateEdit(AuthRequiredMixin, edit.CreateView):
     model = Candidate
     form_class = CandidateForm
+
+
+# def create_person(request, id):
+#     pass
+

@@ -15,6 +15,7 @@
             <th>Следующее ревью</th>
             <th>Сумма повышения</th>
             <th>Больничный</th>
+            <th>Day-off</th>
 
 
 
@@ -47,6 +48,7 @@
             <td>{{ person.next_review|default:"-" }}</td>
             <td>{{ person.salary_raise }}</td>
             <td>{{ person.hospital|default:"-" }}</td>
+            <td>{{ person.day_off|default:"-" }}</td>
 
 
             <td>{{ person.is_active|yesno:"<i class='icon-ok-circle'></i>,<i class='icon-ban-circle'></i>"|safe }}</td>
