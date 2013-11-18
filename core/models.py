@@ -10,6 +10,7 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import Sum
 from django.db.models.query import QuerySet
+from django.db.models.signals import post_save
 
 from .managers import QuerySetManager
 
@@ -136,23 +137,6 @@ class Candidate(People):
     objects = QuerySetManager()
 
 
-    def save(self, *args, **kwargs):
-        super(Candidate, self).save(*args, **kwargs)
-
-        if self.status == '3' and not self.person:
-            if self.title:
-                position = self.title
-            else:
-                position = self.division
-                
-            person = Person(first_name=self.first_name, last_name=self.last_name,
-                email = self.email, phone = self.phone, position = position,
-                works_from = datetime.now().date(), last_review = datetime.now().date(),
-                is_active=True
-                )  
-            person.save()
-
-
     class QuerySet(QuerySet):
 
         def qa(self):
@@ -176,6 +160,22 @@ class Candidate(People):
 
 
 
+def create_person(sender, instance, **kwargs):
+    if instance.status == Candidate.Accepted and not instance.person:
+        if instance.title:
+            position = instance.title
+        else:
+            position = instance.division
+            
+        person = Person(first_name=instance.first_name, last_name=instance.last_name,
+            email = instance.email, phone = instance.phone, position = position,
+            works_from = datetime.now().date(), last_review = datetime.now().date(),
+            is_active=True
+            )  
+        person.save()
+
+
+post_save.connect(create_person, sender=Candidate, dispatch_uid="save_candidate_to_person")
 
 
 
