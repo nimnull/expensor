@@ -25,6 +25,8 @@ class PersonDetailView(DetailView):
         context['salary_form'] = SalaryForm(initial={'person': person})
         context['payment_form'] = PaymentForm(initial={'currency': Currency.default(),
                                                        'amount_src': person.salary.amount})
+        context['person_form'] = PersonForm(instance=person)
+
         return context
 
 

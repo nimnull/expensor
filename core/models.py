@@ -18,11 +18,28 @@ class Action(models.Model):
     name = models.CharField(max_length=128)
 
 
-class Person(models.Model):
+
+class People(models.Model):
+
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.EmailField(db_index=True)
     phone = models.CharField(max_length=10)
+        
+    def __unicode__(self):
+        return self.full_name
+
+    class Meta:
+        abstract = True
+        ordering = ('first_name', 'last_name')
+
+    @property
+    def full_name(self):
+        return u"{0.first_name} {0.last_name}".format(self)
+
+
+
+class Person(People):
     position = models.CharField(max_length=256)
     notes = models.TextField(blank=True, null=True)
     is_active = models.BooleanField(db_index=True, default=False)
@@ -33,8 +50,6 @@ class Person(models.Model):
 
     objects = QuerySetManager()
 
-    class Meta:
-        ordering = ('first_name', 'last_name')
 
     class QuerySet(QuerySet):
 
@@ -44,15 +59,11 @@ class Person(models.Model):
         def inactive(self):
             return self.filter(is_active=False)
 
-    def __unicode__(self):
-        return self.full_name
+
 
     def get_absolute_url(self):
         return reverse('core:person', kwargs={'pk': self.pk})
 
-    @property
-    def full_name(self):
-        return u"{0.first_name} {0.last_name}".format(self)
 
     @property
     def vacation(self):       
@@ -86,35 +97,40 @@ class Person(models.Model):
             rv = 0
         return rv
 
-  
 
 
-division = (    
-    ('1', 'QA'),
-    ('2', 'Python'),
-    ('3', 'JS'),
-    ('4', 'Html/CSS'),
-    ('5', 'Designer')
-    )
+class Candidate(People):
 
-status =  (    
-    ('1', u'Отказали'),
-    ('2', u'Сделали оффер/не принял'),
-    ('3', u'Вышел на работу'),
-    ('4', u'Бан-лист'),    
-    )
+    QA = 1
+    Python = 2
+    JS = 3
+    Html = 4
+    Designer = 5
+    division = (    
+        (QA, 'QA'),
+        (Python, 'Python'),
+        (JS, 'JS'),
+        (Html, 'Html/CSS'),
+        (Designer, 'Designer')
+        )
+
+    Refused = 1
+    Not_accepted = 2
+    Accepted = 3
+    Ban_list = 4
+    status =  (    
+        (Refused, u'Отказали'),
+        (Not_accepted, u'Сделали оффер/не принял'),
+        (Accepted, u'Вышел на работу'),
+        (Ban_list, u'Бан-лист'),    
+        )
 
 
-class Candidate(models.Model):
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    email = models.EmailField(db_index=True)
-    phone = models.CharField(max_length=10)
-    division = models.CharField(max_length=5, choices=division, default='2')
+    division = models.IntegerField(choices=division, default='2')
     cv = models.URLField( blank=True, null=True)
     interview = models.URLField( blank=True, null=True)
     title = models.CharField(max_length=50,  blank=True, null=True)
-    status = models.CharField(max_length=5, choices=status, blank=True, null=True)
+    status = models.IntegerField(choices=status, blank=True, null=True)
     person = models.OneToOneField(Person, blank=True, null=True)
 
     objects = QuerySetManager()
@@ -137,37 +153,27 @@ class Candidate(models.Model):
             person.save()
 
 
-    class Meta:
-        ordering = ('first_name', 'last_name')
-
-
     class QuerySet(QuerySet):
 
         def qa(self):
-            return self.filter(division='1')
+            return self.filter(division=Candidate.QA)
 
         def python(self):
-            return self.filter(division='2')
+            return self.filter(division=Candidate.Python)
 
         def js(self):
-            return self.filter(division='3')
+            return self.filter(division=Candidate.JS)
 
         def html(self):
-            return self.filter(division='4')
+            return self.filter(division=Candidate.Html)
 
         def designer(self):
-            return self.filter(division='5')            
+            return self.filter(division=Candidate.Designer)            
 
-
-    def __unicode__(self):
-        return self.full_name
 
     def get_absolute_url(self):
         return reverse('core:candidate', kwargs={'pk': self.pk})
 
-    @property
-    def full_name(self):
-        return u"{0.first_name} {0.last_name}".format(self)
 
 
 

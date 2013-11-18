@@ -12,6 +12,7 @@
                 <dt>Телефон</dt><dd>{{ person.phone }}</dd>
                 <dt>Позиция</dt><dd>{{ person.position }}</dd>
                 <dt>С нами с</dt><dd>{{ person.works_from }}</dd>
+                 <dt><a href="#editPerson" title="Редактировать сотрудника" data-toggle="modal">Редактировать</a></dt><dd></dd>
             </dl>
         </div>
         {% if user.is_staff %}
@@ -70,6 +71,13 @@
     {% with action_id='addPayment' action_url='core:people' action_title='Внести з/п' action_form=payment_form %}
         {% include "core/modal_form.html" %}
     {% endwith %}
+
+
+    {% with action_id='editPerson' action_url='core:edit_person' person_id=person.id title='Редактировать сотрудника' action_form=person_form %}
+        {% include "core/modal_form.html" %}
+    {% endwith %}  
+
+
 {% endblock modals %}
 
 
