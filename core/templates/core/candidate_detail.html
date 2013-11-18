@@ -20,7 +20,7 @@
 {% endblock content %}
 
 {% block modals %}
-    {% with action_id='editCandidate' action_url='core:add_candidate' action_title='Редактировать кандидата' action_form=person_form %}
+    {% with action_id='editCandidate' action_url='core:edit_candidate' person_id=candidate.id action_title='Редактировать кандидата' action_form=candidate_form %}
         {% include "core/modal_form.html" %}
     {% endwith %}  
 {% endblock modals %}

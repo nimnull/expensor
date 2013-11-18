@@ -126,7 +126,7 @@ class Candidate(People):
         )
 
 
-    division = models.IntegerField(choices=division, default='2')
+    division = models.IntegerField(choices=division, default=Python)
     cv = models.URLField( blank=True, null=True)
     interview = models.URLField( blank=True, null=True)
     title = models.CharField(max_length=50,  blank=True, null=True)

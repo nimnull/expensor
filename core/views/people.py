@@ -30,7 +30,11 @@ class PersonDetailView(DetailView):
         return context
 
 
-class PersonEdit(AuthRequiredMixin, edit.CreateView):
+class PersonAdd(AuthRequiredMixin, edit.CreateView):
+    model = Person
+    form_class = PersonForm
+
+class PersonEdit(AuthRequiredMixin, edit.UpdateView):
     model = Person
     form_class = PersonForm
 
@@ -53,16 +57,18 @@ class CandidateView(AuthRequiredMixin, ListView):
 class CandidateDetailView(DetailView):
     model = Candidate
 
-    # def get_context_data(self, **kwargs):
-    #     person = kwargs['object']
-    #     context = super(PersonDetailView, self).get_context_data(**kwargs)
-    #     context['salary_form'] = SalaryForm(initial={'person': person})
-    #     context['payment_form'] = PaymentForm(initial={'currency': Currency.default(),
-    #                                                    'amount_src': person.salary.amount})
-    #     return context
+    def get_context_data(self, **kwargs):
+        candidate = kwargs['object']
+        context = super(CandidateDetailView, self).get_context_data(**kwargs)
+        context['candidate_form'] = CandidateForm(instance=candidate)
+        return context
+
+class CandidateAdd(AuthRequiredMixin, edit.CreateView):
+    model = Candidate
+    form_class = CandidateForm
 
 
-class CandidateEdit(AuthRequiredMixin, edit.CreateView):
+class CandidateEdit(AuthRequiredMixin, edit.UpdateView):
     model = Candidate
     form_class = CandidateForm
 
