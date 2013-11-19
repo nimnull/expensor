@@ -1,5 +1,5 @@
 <div class="modal hide fade" id="{{ action_id }}"><!-- '' Ввод расхода expense_form -->
-    {% if person_id%}
+    {% if person_id %}
     <form class="form-horizontal" action="{% url action_url pk=person_id%}" method="POST">
     {% else %}
      <form class="form-horizontal" action="{% url action_url %}" method="POST">

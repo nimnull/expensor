@@ -19,7 +19,7 @@ class PersonAdmin(admin.ModelAdmin):
 
 
 class CandidateAdmin(admin.ModelAdmin):
-    list_display = ('full_name', 'email', 'phone', 'title', 'status')
+    list_display = ('full_name', 'email', 'phone', 'title', 'status',)
 
   
 

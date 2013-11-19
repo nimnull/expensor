@@ -25,7 +25,7 @@
             <table>
                 {% for e_cat in expense_categories %}
                     <tr>
-                        <td>{{ e_cat.name }}</td>
+                        <td><a href="{% url 'core:expence_category' pk=e_cat.id %}">{{ e_cat.name }}</a></td>
                         <td style="text-align: right;">{{ e_cat.get_total }}</td>
                         <td style="text-align: right;">{{ e_cat.get_total|currency:'HRN' }}</td>
 

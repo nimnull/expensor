@@ -10,14 +10,14 @@ class PersonForm(forms.ModelForm):
 
     class Meta:
         model = Person
-        exclude = ('notes',)
+        exclude = ('notes', )
 
 
 class CandidateForm(forms.ModelForm):
 
     class Meta:
         model = Candidate
-        exclude = ('person',)
+        exclude = ('person', )
 
 
 class AccountForm(forms.ModelForm):
@@ -31,7 +31,7 @@ class SalaryForm(forms.ModelForm):
 
     class Meta:
         model = Salary
-        exclude = ('created_at',)
+        exclude = ('created_at', )
         widgets = {
             'person': forms.HiddenInput
         }

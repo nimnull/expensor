@@ -11,6 +11,7 @@ from django.db import models
 from django.db.models import Sum
 from django.db.models.query import QuerySet
 from django.db.models.signals import post_save
+from django.db import connection
 
 from .managers import QuerySetManager
 
@@ -107,6 +108,7 @@ class Candidate(People):
     JS = 3
     Html = 4
     Designer = 5
+
     division = (    
         (QA, 'QA'),
         (Python, 'Python'),
@@ -119,6 +121,7 @@ class Candidate(People):
     Not_accepted = 2
     Accepted = 3
     Ban_list = 4
+
     status =  (    
         (Refused, u'Отказали'),
         (Not_accepted, u'Сделали оффер/не принял'),
@@ -232,6 +235,9 @@ class ExpenseCategory(models.Model):
     def __unicode__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse('core:expence_category', kwargs={'pk': self.pk})
+
     @classmethod
     def get_commission(cls):
         return cls.objects.get(direct_expense=True, is_transfer=True)
@@ -247,6 +253,14 @@ class ExpenseCategory(models.Model):
     def get_total(self):
         total = self.transactions.aggregate(Sum('amount'))['amount__sum']
         return total if total is not None else 0
+
+    def get_by_month(self):
+        return self.transactions.extra({"month": connection.ops.date_trunc_sql('month','bill_date')}).\
+            values("month").annotate(sum=Sum("amount")).order_by("month")
+
+
+
+
 
 class Currency(models.Model):
     name = models.CharField(u'название', max_length=255, unique=True)

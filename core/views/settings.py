@@ -1,5 +1,5 @@
 from django.core.urlresolvers import reverse_lazy
-from django.views.generic import TemplateView, edit
+from django.views.generic import TemplateView, DetailView, edit
 from core.forms import AccountForm, ExpenseCategoryForm, CurrencyForm
 from core.models import Account, ExpenseCategory, Currency
 from core.views.base import AuthRequiredMixin
@@ -38,6 +38,16 @@ class AccountCreateView(edit.CreateView):
 class ExpenseCategoryAddView(AuthRequiredMixin, edit.CreateView):
     model = ExpenseCategory
     success_url = reverse_lazy('core:settings')
+
+
+class ExpenseCategoryView(AuthRequiredMixin, DetailView):
+    model = ExpenseCategory
+
+    def get_context_data(self, **kwargs):
+        # expence = kwargs['object']
+        context = super(ExpenseCategoryView, self).get_context_data(**kwargs)
+
+        return context
 
 
 class CurrencyAddView(AuthRequiredMixin, edit.CreateView):

@@ -1,0 +1,31 @@
+{% extends "core/inner_base.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="span10">
+            <h3>
+                Тип расходов: {{ expensecategory.name }}
+            </h3>
+            <h3>Всего: {{ expensecategory.get_total }}                
+            </h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Месяц</th>
+                        <th>Сумма</th>                     
+                    </tr>
+                </thead>
+                {% for sum in expensecategory.get_by_month %}
+                    <tr>
+                        <td>{{ sum.month }} </td>
+                        <td>{{ sum.sum }} </td>                        
+                    </tr>                  
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+{% endblock content %}
+
+
+
