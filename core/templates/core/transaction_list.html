@@ -11,7 +11,7 @@
                     <a href="#newTransfer" title="перевод" data-toggle="modal"><i class="icon-retweet"></i></a>
                 </small></sup>
             </h3>
-            <table class="table table-striped">
+            <table class="table table-striped" id='1'>
                 <thead>
                     <tr>
                         <th>цель</th>
@@ -22,7 +22,56 @@
                         <th>счет</th>
                         <th></th>
                     </tr>
-                </thead>
+                </thead>                  
+            {# </table> #}
+               {% for month in transactions %}                        
+                    <tr class="info">
+                        <th><h4>{{ month.month }}</h4></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>               
+                    
+            {# <table class="table table-striped" >   #}
+                        {% for trans in month.transactions %}                  
+                            <tr>
+                                <td>
+                                    {% with direction=trans.direction %}{% include "core/direction.html" %}{% endwith %}
+                                </td>
+                                <td><a href="#" data-toggle="tooltip" title="{{ trans.comment }}">{{ trans.bill_date }}</a></td>
+                                <td>{{ trans.person|default:trans.category|default:"n/a" }}</td>
+                                <td>{{ trans.amount }}</td>
+                                <td>{{ trans.amount_src }} {{ trans.currency }}</td>
+                                <td>{{ trans.account }}</td>
+                                <td>
+                                    <a data-action="add-commission" data-target="{% url 'core:add_comission' pk=trans.id %}" href="#addCommission">
+                                        <i class="icon-shopping-cart"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% for child in trans.children.all %}
+                                <tr style="font-size:0.8em;">
+                                    <td></td>
+                                    <td>
+                                        {% with direction=child.direction %}{% include "core/direction.html" %}{% endwith %}
+                                    </td>
+                                    <td>{{ child.category|default:"n/a"|lower }}</td>
+                                    <td>{{ child.amount }}</td>
+                                    <td>{{ child.amount_src }} {{ child.currency}}</td>
+                                    <td>{{ child.account }}</td>
+                                    <td colspan="2"></td>
+                                </tr>
+                            {% endfor %}            
+                        {% endfor %} 
+            {# </table>   #}
+                {% endfor %}
+
+
+
+                {% comment %}
                 {% for trans in object_list %}
                     <tr>
                         <td>
@@ -53,8 +102,28 @@
                         </tr>
                     {% endfor %}
                 {% endfor %}
+                {% endcomment %}
+
             </table>
         </div>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if transactions.has_previous %}
+                <a href="?page={{ transactions.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ transactions.number }} of {{ transactions.paginator.num_pages }}.
+            </span>
+
+            {% if transactions.has_next %}
+                <a href="?page={{ transactions.next_page_number }}">next</a>
+            {% endif %}
+        </span>
+    </div>
+
+
     </div>
 
 {% endblock content %}

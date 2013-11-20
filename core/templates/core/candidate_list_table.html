@@ -2,7 +2,7 @@
     <thead>
         <tr>
             <th>#</th>
-            <th>Имя</th>
+            <th class="col-name">Имя</th>
             <th>Контакты</th>
 
             <th>CV</th>
@@ -17,7 +17,7 @@
         {% for person in persons %}
         <tr>
             <td>{{ forloop.counter }}</td>
-            <td>
+            <td class="col-name">
                 <a href="{% url 'core:candidate' pk=person.id %}" title="профиль">
                     {{ person.first_name }} {{ person.last_name }}
                 </a>

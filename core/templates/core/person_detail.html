@@ -3,7 +3,9 @@
 
 {% block content %}
     <div class="row">
-        <div class="span10"><h3>{{ person.full_name }} <a data-action="add-payment" data-target="{% url 'core:add_payment' pk=person.id %}" href="#addPayment"><i class="icon-gift"></i></a></h3></div>
+        <div class="span10"><h3>{{ person.full_name }} 
+        <a data-action="add-payment" data-target="{% url 'core:add_payment' pk=person.id %}" href="#addPayment"><i class="icon-gift"></i></a>
+        <a href="#editPerson" title="Редактировать сотрудника" data-toggle="modal"><i class="icon-pencil"></i></a></h3></div>
     </div>
     <div class="row">
         <div class="span3">
@@ -11,8 +13,7 @@
                 <dt>Email</dt><dd>{{ person.email }}</dd>
                 <dt>Телефон</dt><dd>{{ person.phone }}</dd>
                 <dt>Позиция</dt><dd>{{ person.position }}</dd>
-                <dt>С нами с</dt><dd>{{ person.works_from }}</dd>
-                 <dt><a href="#editPerson" title="Редактировать сотрудника" data-toggle="modal">Редактировать</a></dt><dd></dd>
+                <dt>С нами с</dt><dd>{{ person.works_from }}</dd>             
             </dl>
         </div>
         {% if user.is_staff %}

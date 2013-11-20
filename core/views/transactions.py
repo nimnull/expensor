@@ -1,4 +1,5 @@
 from django.core.urlresolvers import reverse_lazy
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView, edit
 from core.forms import (ExpenseTransactionForm, TransferForm,
                         IncomeTransactionForm, CommissionForm, PaymentForm)
@@ -13,7 +14,8 @@ class TransactionListView(AuthRequiredMixin, ListView):
     """ Full list of transactions
     """
     model = Transaction
-    queryset = Transaction.objects.filter(parent__isnull=True).order_by('-bill_date')
+    # queryset = Transaction.objects.filter(parent__isnull=True).order_by('-bill_date')
+
     def get_context_data(self, **kwargs):
         context = super(TransactionListView, self).get_context_data(**kwargs)
 
@@ -25,6 +27,26 @@ class TransactionListView(AuthRequiredMixin, ListView):
         context['income_form'] = IncomeTransactionForm(initial=initial)
 
         context['commission_form'] = CommissionForm()
+        
+
+        transactions = []
+        monthes = Transaction.objects.dates("bill_date", "month")
+        for month in monthes:
+            month_payments = Transaction.objects.filter(bill_date__month=month.month).order_by('-bill_date')
+            transactions.append({'month': month.strftime("%Y %m"), 'transactions': month_payments })
+        transactions = sorted(transactions, key=lambda k: k['month'], reverse=True)
+
+
+        paginator = Paginator(transactions, 2)
+        page = self.request.GET.get('page')
+        try:
+            paged_trans = paginator.page(page)
+        except PageNotAnInteger:            
+            paged_trans = paginator.page(1)
+        except EmptyPage:            
+            paged_trans = paginator.page(paginator.num_pages)
+
+        context['transactions'] = paged_trans
 
         return context
 

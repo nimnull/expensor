@@ -8,7 +8,7 @@
             <h3>Счета
                 <a href="#newAccount" title="добавить счет" data-toggle="modal"><i class="icon-plus"></i></a>
             </h3>
-            <table>
+            <table class="table table-bordered">
                 {% for account in accounts %}
                     <tr>
                         <td>{{ account.name }}</td>
@@ -22,7 +22,7 @@
             <h3>Типы расходов
                 <a href="#newExpenseCategory" title="добавить тип расходов" data-toggle="modal"><i class="icon-plus"></i></a>
             </h3>
-            <table>
+            <table class="table table-bordered">
                 {% for e_cat in expense_categories %}
                     <tr>
                         <td><a href="{% url 'core:expence_category' pk=e_cat.id %}">{{ e_cat.name }}</a></td>
@@ -39,7 +39,7 @@
             <h3>Валюта
                 <a href="#newCurrency" title="добавить валюту" data-toggle="modal"><i class="icon-plus"></i></a>
             </h3>
-            <table>
+            <table class="table table-bordered">
                 {% for currency in currencies %}
                     <tr>
                         <td style="text-align: right;">{{ currency.name }}</td>
