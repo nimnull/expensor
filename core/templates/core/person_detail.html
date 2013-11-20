@@ -30,11 +30,22 @@
         </div>
         <div class="span3">
             <h4>Выплаты:</h4>
+            {% for month in person.payments %}
+                <h5>{{ month.month }}, Сумма: {{ month.month_sum }}</h5>
+                <ul class="styled">
+                    {% for payment in month.payments %}
+                        <li>{{ payment.bill_date }} &mdash; <a href="#" data-toggle="tooltip" title="{{ payment.comment }}">${{ payment.amount }}</a></li> 
+                    {% endfor %} 
+                </ul>
+            {% endfor %}
+
+            {% comment %}
             <ul class="unstyled">
                 {% for transaction in person.transactions.all %}
                 <li>{{ transaction.bill_date }} &mdash; <a href="#" data-toggle="tooltip" title="{{ transaction.comment }}">${{ transaction.amount }}</a></li>
                 {% endfor %}
             </ul>
+            {% endcomment %}
         </div>
         {% else %}
             <div class="span3">Отдам кота, недорого!</div>

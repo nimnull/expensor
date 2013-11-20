@@ -99,6 +99,16 @@ class Person(People):
             rv = 0
         return rv
 
+    @property
+    def payments(self):
+        payments = []
+        monthes = self.transactions.dates("bill_date", "month")
+        for month in monthes:
+            month_payments = self.transactions.filter(bill_date__month=month.month)            
+            month_sum = month_payments.aggregate(Sum("amount"))['amount__sum']
+            payments.append({'month': month.strftime("%Y %m"), 'month_sum': month_sum, 'payments': month_payments })
+        payments = sorted(payments, key=lambda k: k['month'], reverse=True)
+        return payments
 
 
 class Candidate(People):
