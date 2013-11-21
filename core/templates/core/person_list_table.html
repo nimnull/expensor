@@ -7,7 +7,7 @@
             <th>З/П</th>
             {% if user.is_staff %}           
             {% endif %}
-            <th>С нами с</th>
+            <th class="col-name">С нами с</th>
             <th>Долг</th>
 
             <th>Отпуск (дней)</th>
@@ -25,7 +25,11 @@
     </thead>
     <tbody>
         {% for person in persons %}
-        <tr>
+            {% if person.missed_review %}
+            <tr class="row-hihglight">
+            {% else %}
+            <tr>
+            {% endif %}            
             <td>{{ forloop.counter }}</td>
             <td class="col-name">
                 <a href="{% url 'core:person' pk=person.id %}" title="профиль">
@@ -40,7 +44,7 @@
                     секрет
                 {% endif %}
             </td>
-            <td>{{ person.works_from }}</td>
+            <td class="col-name">{{ person.works_from }}</td>
             <td>-</td>
 
             <td>{{ person.vacation }}</td>

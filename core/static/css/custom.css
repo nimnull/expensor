@@ -3,3 +3,13 @@
 .col-name{
   white-space: nowrap;
 }
+
+.row-hihglight{
+  background-color: #FF0000;
+}
+
+
+.table-striped tbody>tr.row-hihglight:nth-child(odd)>td,
+.table-striped tbody>tr.row-hihglight:nth-child(odd)>th{
+    background-color: #FF0000;
+}

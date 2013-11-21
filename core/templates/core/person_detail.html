@@ -35,7 +35,7 @@
                 <h5>{{ month.month }}, Сумма: {{ month.month_sum }}</h5>
                 <ul class="styled">
                     {% for payment in month.payments %}
-                        <li>{{ payment.bill_date }} &mdash; <a href="#" data-toggle="tooltip" title="{{ payment.comment }}">${{ payment.amount }}</a></li> 
+                        <li>{{ payment.bill_date }} &mdash; <a href="#" data-toggle="tooltip" title="{{ payment.comment }}">{{ payment.amount }}</a></li> 
                     {% endfor %} 
                 </ul>
             {% endfor %}

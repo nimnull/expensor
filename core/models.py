@@ -78,6 +78,15 @@ class Person(People):
             return self.last_review + relativedelta(months=6)
 
     @property
+    def missed_review(self):
+        if self.next_review < datetime.now().date():
+            return True
+        else:
+            return False
+
+
+
+    @property
     def salary(self):
         salaries = Salary.objects.filter(person=self,
                                          active_from__lte=datetime.now)
@@ -109,6 +118,9 @@ class Person(People):
             payments.append({'month': month.strftime("%Y %m"), 'month_sum': month_sum, 'payments': month_payments })
         payments = sorted(payments, key=lambda k: k['month'], reverse=True)
         return payments
+
+
+
 
 
 class Candidate(People):
@@ -265,10 +277,12 @@ class ExpenseCategory(models.Model):
         return total if total is not None else 0
 
     def get_by_month(self):
-        return self.transactions.extra({"month": connection.ops.date_trunc_sql('month','bill_date')}).\
+        
+        responce = self.transactions.extra({"month": connection.ops.date_trunc_sql('month','bill_date')}).\
             values("month").annotate(sum=Sum("amount")).order_by("month")
-
-
+        for month in responce:          
+            month['month']=' '.join(month['month'].split('-')[:2])
+        return responce
 
 
 

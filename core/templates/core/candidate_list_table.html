@@ -24,8 +24,16 @@
             </td>
             <td>{{ person.email }}</td>
 
-            <td>{{ person.cv|default:"-" }}</td>            
-            <td>{{ person.interview|default:"-" }}</td>
+            {% if person.cv %}
+            <td><a href="{{ person.cv }}">Link</a></td> 
+            {% else %} 
+            <td>-</td>      
+            {% endif %}
+            {% if person.interview %}
+            <td><a href="{{ person.interview }}">Link</a></td> 
+            {% else %} 
+            <td>-</td>      
+            {% endif %}
             <td>{{ person.title|default:"-" }}</td>
             <td>{{ person.get_status_display|default:"-" }}</td>
 
