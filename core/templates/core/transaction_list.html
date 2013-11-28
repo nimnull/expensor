@@ -34,7 +34,7 @@
                                 <td>
                                     {% with direction=trans.direction %}{% include "core/direction.html" %}{% endwith %}
                                 </td>
-                                <td><a href="#" data-toggle="tooltip" title="{{ trans.comment }}">{{ trans.bill_date }}</a></td>
+                                <td><a href="#" data-toggle="tooltip" title="{{ trans.comment }}">{{ trans.bill_date|date:"Y.m.d" }}</a></td>
                                 <td>{{ trans.person|default:trans.category|default:"n/a" }}</td>
                                 <td>{{ trans.amount }}</td>
                                 <td>{{ trans.amount_src }} {{ trans.currency }}</td>
