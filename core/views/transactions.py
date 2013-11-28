@@ -27,23 +27,23 @@ class TransactionListView(AuthRequiredMixin, ListView):
         context['income_form'] = IncomeTransactionForm(initial=initial)
 
         context['commission_form'] = CommissionForm()
-        
 
         transactions = []
-        monthes = Transaction.objects.dates("bill_date", "month")
-        for month in monthes:
-            month_payments = Transaction.objects.filter(bill_date__month=month.month).order_by('-bill_date')
-            transactions.append({'month': month.strftime("%Y %m"), 'transactions': month_payments })
-        transactions = sorted(transactions, key=lambda k: k['month'], reverse=True)
 
+        months = Transaction.objects.parents().dates("bill_date", "month", order='DESC')
+        for month in months:
+            month_payments = Transaction.objects.parents().filter(bill_date__month=month.month)
+            transactions.append((month, month_payments))
 
         paginator = Paginator(transactions, 2)
+
         page = self.request.GET.get('page')
+
         try:
             paged_trans = paginator.page(page)
-        except PageNotAnInteger:            
+        except PageNotAnInteger:
             paged_trans = paginator.page(1)
-        except EmptyPage:            
+        except EmptyPage:
             paged_trans = paginator.page(paginator.num_pages)
 
         context['transactions'] = paged_trans

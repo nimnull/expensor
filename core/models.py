@@ -269,11 +269,14 @@ class ExpenseCategory(models.Model):
         return total if total is not None else 0
 
     def get_by_month(self):
-        response = self.transactions.extra({"month": connection.ops.date_trunc_sql('month','bill_date')}).\
-            values("month").annotate(sum=Sum("amount")).order_by("month")
-        for month in response:
-            month['month'] = ' '.join(month['month'].split('-')[:2])
-        return response
+        rv = self.transactions \
+                 .extra({"month": connection.ops.date_trunc_sql('month', 'bill_date')}) \
+                 .values("month") \
+                 .annotate(sum=Sum("amount")) \
+                 .order_by("month")
+        for row in rv:
+            row['month'] = '.'.join(row['month'].split('-')[:2])
+        return rv
 
 
 class Currency(models.Model):
@@ -334,6 +337,13 @@ class Transaction(models.Model):
     created_at = models.DateTimeField(auto_now=True, auto_now_add=True)
 
     comment = models.TextField(blank=True, null=True)
+
+    objects = QuerySetManager()
+
+    class QuerySet(QuerySet):
+
+         def parents(self):
+             return self.filter(parent__isnull=True)
 
     class Meta:
         ordering = ('-bill_date',)

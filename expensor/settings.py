@@ -35,7 +35,7 @@ TIME_ZONE = 'Europe/Kiev'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
 
 SITE_ID = 1
 
@@ -45,7 +45,7 @@ USE_I18N = True
 
 # If you set this to False, Django will not format dates, numbers and
 # calendars according to the current locale.
-USE_L10N = False
+USE_L10N = True
 
 # If you set this to False, Django will not use timezone-aware datetimes.
 USE_TZ = True
@@ -167,7 +167,7 @@ DEBUG_TOOLBAR_CONFIG = {
 LOGIN_REDIRECT_URL = 'core:dashboard'
 
 
-DATE_FORMAT = 'Y m'
+DATE_FORMAT = 'Y.m.d'
 # DATETIME_FORMAT = 'Y m'
 
 # A sample logging configuration. The only tangible logging

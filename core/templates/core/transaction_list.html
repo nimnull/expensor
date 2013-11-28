@@ -24,19 +24,12 @@
                     </tr>
                 </thead>                  
             {# </table> #}
-               {% for month in transactions %}                        
+               {% for month, transactions in transactions %}
                     <tr class="info">
-                        <th><h4>{{ month.month }}</h4></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                    </tr>               
-                    
+                        <th colspan="7"><h4>{{ month|date:"m.Y" }}</h4></th>
+                    </tr>
             {# <table class="table table-striped" >   #}
-                        {% for trans in month.transactions %}                  
+                        {% for trans in transactions %}
                             <tr>
                                 <td>
                                     {% with direction=trans.direction %}{% include "core/direction.html" %}{% endwith %}

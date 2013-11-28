@@ -64,6 +64,7 @@ class CandidateDetailView(DetailView):
         context['candidate_form'] = CandidateForm(instance=candidate)
         return context
 
+
 class CandidateAdd(AuthRequiredMixin, edit.CreateView):
     model = Candidate
     form_class = CandidateForm

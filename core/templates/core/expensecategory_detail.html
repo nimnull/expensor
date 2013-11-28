@@ -15,10 +15,10 @@
                         <th>Сумма</th>                     
                     </tr>
                 </thead>
-                {% for sum in expensecategory.get_by_month %}
+                {% for row in expensecategory.get_by_month %}
                     <tr>
-                        <td>{{ sum.month }} </td>
-                        <td>{{ sum.sum }} </td>                        
+                        <td>{{ row.month }} </td>
+                        <td>{{ row.sum }} </td>
                     </tr>                  
                 {% endfor %}
             </table>
