@@ -20,7 +20,6 @@ class Action(models.Model):
     name = models.CharField(max_length=128)
 
 
-
 class People(models.Model):
 
     first_name = models.CharField(max_length=50)
@@ -40,7 +39,6 @@ class People(models.Model):
         return u"{0.first_name} {0.last_name}".format(self)
 
 
-
 class Person(People):
     position = models.CharField(max_length=256)
     notes = models.TextField(blank=True, null=True)
@@ -51,7 +49,6 @@ class Person(People):
     day_off = models.IntegerField(blank=True, null=True)
 
     objects = QuerySetManager()
-
 
     class QuerySet(QuerySet):
 
@@ -83,8 +80,6 @@ class Person(People):
             return True
         else:
             return False
-
-
 
     @property
     def salary(self):
@@ -120,39 +115,35 @@ class Person(People):
         return payments
 
 
-
-
-
 class Candidate(People):
 
     QA = 1
-    Python = 2
+    PYTHON = 2
     JS = 3
-    Html = 4
-    Designer = 5
+    HTML = 4
+    DESIGN = 5
 
     division = (    
         (QA, 'QA'),
-        (Python, 'Python'),
+        (PYTHON, 'Python'),
         (JS, 'JS'),
-        (Html, 'Html/CSS'),
-        (Designer, 'Designer')
-        )
+        (HTML, 'Html/CSS'),
+        (DESIGN, 'Designer')
+    )
 
-    Refused = 1
-    Not_accepted = 2
-    Accepted = 3
-    Ban_list = 4
+    REFUSED = 1
+    NOT_ACCEPTED = 2
+    ACCEPTED = 3
+    BANNED = 4
 
-    status =  (    
-        (Refused, u'Отказали'),
-        (Not_accepted, u'Сделали оффер/не принял'),
-        (Accepted, u'Вышел на работу'),
-        (Ban_list, u'Бан-лист'),    
-        )
+    status = (
+        (REFUSED, u'Отказали'),
+        (NOT_ACCEPTED, u'Сделали оффер/не принял'),
+        (ACCEPTED, u'Вышел на работу'),
+        (BANNED, u'Бан-лист'),
+    )
 
-
-    division = models.IntegerField(choices=division, default=Python)
+    division = models.IntegerField(choices=division, default=PYTHON)
     cv = models.URLField( blank=True, null=True)
     interview = models.URLField( blank=True, null=True)
     title = models.CharField(max_length=50,  blank=True, null=True)
@@ -161,47 +152,48 @@ class Candidate(People):
 
     objects = QuerySetManager()
 
-
     class QuerySet(QuerySet):
 
         def qa(self):
             return self.filter(division=Candidate.QA)
 
         def python(self):
-            return self.filter(division=Candidate.Python)
+            return self.filter(division=Candidate.PYTHON)
 
         def js(self):
             return self.filter(division=Candidate.JS)
 
         def html(self):
-            return self.filter(division=Candidate.Html)
+            return self.filter(division=Candidate.HTML)
 
         def designer(self):
-            return self.filter(division=Candidate.Designer)            
-
+            return self.filter(division=Candidate.DESIGN)
 
     def get_absolute_url(self):
         return reverse('core:candidate', kwargs={'pk': self.pk})
 
 
-
 def create_person(sender, instance, **kwargs):
-    if instance.status == Candidate.Accepted and not instance.person:
+    if instance.status == Candidate.ACCEPTED and not instance.person:
         if instance.title:
             position = instance.title
         else:
             position = instance.division
             
-        person = Person(first_name=instance.first_name, last_name=instance.last_name,
-            email = instance.email, phone = instance.phone, position = position,
-            works_from = datetime.now().date(), last_review = datetime.now().date(),
+        person = Person(
+            first_name=instance.first_name,
+            last_name=instance.last_name,
+            email=instance.email,
+            phone=instance.phone,
+            position=position,
+            works_from=datetime.now().date(),
+            last_revie=datetime.now().date(),
             is_active=True
-            )  
+        )
         person.save()
 
 
 post_save.connect(create_person, sender=Candidate, dispatch_uid="save_candidate_to_person")
-
 
 
 class Salary(models.Model):
@@ -277,13 +269,11 @@ class ExpenseCategory(models.Model):
         return total if total is not None else 0
 
     def get_by_month(self):
-        
-        responce = self.transactions.extra({"month": connection.ops.date_trunc_sql('month','bill_date')}).\
+        response = self.transactions.extra({"month": connection.ops.date_trunc_sql('month','bill_date')}).\
             values("month").annotate(sum=Sum("amount")).order_by("month")
-        for month in responce:          
-            month['month']=' '.join(month['month'].split('-')[:2])
-        return responce
-
+        for month in response:
+            month['month'] = ' '.join(month['month'].split('-')[:2])
+        return response
 
 
 class Currency(models.Model):

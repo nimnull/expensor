@@ -21,8 +21,6 @@ class PersonAdmin(admin.ModelAdmin):
 class CandidateAdmin(admin.ModelAdmin):
     list_display = ('full_name', 'email', 'phone', 'title', 'status',)
 
-  
-
 
 class TransactionAdmin(admin.ModelAdmin):
     list_display = ('account', 'bill_date', 'amount', 'amount_src', 'currency',
