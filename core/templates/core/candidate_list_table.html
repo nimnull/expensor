@@ -1,0 +1,44 @@
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th class="col-name">Имя</th>
+            <th>Контакты</th>
+
+            <th>CV</th>
+            <th>Интервью</th>
+            <th>Title</th>
+            <th>Статус</th>
+
+
+        </tr>
+    </thead>
+    <tbody>
+        {% for person in persons %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td class="col-name">
+                <a href="{% url 'core:candidate' pk=person.id %}" title="профиль">
+                    {{ person.first_name }} {{ person.last_name }}
+                </a>
+            </td>
+            <td>{{ person.email }}</td>
+
+            {% if person.cv %}
+            <td><a href="{{ person.cv }}">Link</a></td> 
+            {% else %} 
+            <td>-</td>      
+            {% endif %}
+            {% if person.interview %}
+            <td><a href="{{ person.interview }}">Link</a></td> 
+            {% else %} 
+            <td>-</td>      
+            {% endif %}
+            <td>{{ person.title|default:"-" }}</td>
+            <td>{{ person.get_status_display|default:"-" }}</td>
+
+
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

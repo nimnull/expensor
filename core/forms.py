@@ -1,16 +1,23 @@
 # encoding: utf-8
 from __future__ import absolute_import
-from decimal import Decimal
+# from decimal import Decimal
 from django import forms
-from django.contrib.contenttypes.models import ContentType
-from .models import Person, Account, Salary, ExpenseCategory, Currency, Transaction
+# from django.contrib.contenttypes.models import ContentType
+from .models import Person, Account, Salary, ExpenseCategory, Currency, Transaction, Candidate
 
 
 class PersonForm(forms.ModelForm):
 
     class Meta:
         model = Person
-        exclude = ('notes',)
+        exclude = ('notes', )
+
+
+class CandidateForm(forms.ModelForm):
+
+    class Meta:
+        model = Candidate
+        exclude = ('person', )
 
 
 class AccountForm(forms.ModelForm):
@@ -24,7 +31,7 @@ class SalaryForm(forms.ModelForm):
 
     class Meta:
         model = Salary
-        exclude = ('created_at',)
+        exclude = ('created_at', )
         widgets = {
             'person': forms.HiddenInput
         }

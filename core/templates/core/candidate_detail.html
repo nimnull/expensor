@@ -1,0 +1,31 @@
+{% extends "core/inner_base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="row">
+        <div class="span10"><h3>{{ candidate.full_name }} <a href="#editCandidate" title="Редактировать кандидата" data-toggle="modal"><i class="icon-pencil"></i></a></h3></div>
+    </div>
+    <div class="row">
+        <div class="span3">
+            <dl>
+                <dt>Email</dt><dd>{{ candidate.email }}</dd>
+                <dt>Телефон</dt><dd>{{ candidate.phone }}</dd>              
+            </dl>
+        </div>
+
+       <div class="span3">Отдам кота, недорого!</div>
+
+    </div>
+{% endblock content %}
+
+{% block modals %}
+    {% with action_id='editCandidate' action_url='core:edit_candidate' person_id=candidate.id action_title='Редактировать кандидата' action_form=candidate_form %}
+        {% include "core/modal_form.html" %}
+    {% endwith %}  
+{% endblock modals %}
+
+
+{% block extra_js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/payment_form.js' %}"></script>
+{% endblock extra_js %}

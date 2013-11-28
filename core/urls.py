@@ -2,9 +2,12 @@ from __future__ import absolute_import
 
 from django.conf.urls import patterns, url
 from core.views.people import (PeopleView, PersonDetailView, PersonEdit,
-                               SalaryAddView)
+                               SalaryAddView, PersonAdd)
+from core.views.people import (CandidateView, CandidateDetailView, CandidateEdit,
+                               CandidateAdd)
 from core.views.settings import (DashboardView, SettingsView, AccountCreateView,
-                                 ExpenseCategoryAddView, CurrencyAddView)
+                                 ExpenseCategoryAddView, ExpenseCategoryView,
+                                 CurrencyAddView)
 from core.views.transactions import (TransactionListView, IncomeAddView,
                                      ExpenseAddView, TransferAddView,
                                      CommissionAddView, PaymentAddView)
@@ -16,13 +19,20 @@ urlpatterns = patterns('core.views',
 
     url(r'^people/$', PeopleView.as_view(), name='people'),
     url(r'^people/(?P<pk>\d+)$', PersonDetailView.as_view(), name='person'),
-    url(r'^people/add/$', PersonEdit.as_view(), name='add_person'),
+    url(r'^people/add/$', PersonAdd.as_view(), name='add_person'),
     url(r'^people/edit/(?P<pk>\d+)$', PersonEdit.as_view(), name='edit_person'),
+
+    url(r'^candidate/$', CandidateView.as_view(), name='candidates'),
+    url(r'^candidate/(?P<pk>\d+)$', CandidateDetailView.as_view(), name='candidate'),
+    url(r'^candidate/add/$', CandidateAdd.as_view(), name='add_candidate'),
+    url(r'^candidate/edit/(?P<pk>\d+)$', CandidateEdit.as_view(), name='edit_candidate'),
 
     url(r'^salaries/add/$', SalaryAddView.as_view(), name='add_salary'),
 
     url(r'^accounts/add/$', AccountCreateView.as_view(), name='add_account'),
 
+    url(r'^expense_categories/(?P<pk>\d+)$', ExpenseCategoryView.as_view(), 
+        name='expence_category'),
     url(r'^expense_categories/add/$', ExpenseCategoryAddView.as_view(),
         name='add_expense_category'),
 

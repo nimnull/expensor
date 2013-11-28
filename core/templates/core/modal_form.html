@@ -1,5 +1,9 @@
 <div class="modal hide fade" id="{{ action_id }}"><!-- '' Ввод расхода expense_form -->
-    <form class="form-horizontal" action="{% url action_url %}" method="POST">
+    {% if person_id %}
+    <form class="form-horizontal" action="{% url action_url pk=person_id%}" method="POST">
+    {% else %}
+     <form class="form-horizontal" action="{% url action_url %}" method="POST">
+    {% endif %}
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h3>{{ action_title }}</h3>
