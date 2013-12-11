@@ -15,6 +15,13 @@
                 <dt>Позиция</dt><dd>{{ person.position }}</dd>
                 <dt>С нами с</dt><dd>{{ person.works_from }}</dd>             
             </dl>
+            <h4>Инвентарь</h4>    
+            <ul class="styled">
+                {% for item in person.inventory_set.all %}
+                        <li><a href="{% url 'core:inventory_item' pk=item.id %}" 
+                            data-toggle="tooltip" title="{{ payment.comment }}">{{ item.name }}</a></li> 
+                {% endfor %} 
+            </ul>
         </div>
         {% if user.is_staff %}
         <div class="span3">
