@@ -1,0 +1,46 @@
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th class="col-name">Название</th>
+            <th>Описание</th>
+
+            <th>Дата покупки</th>
+            <th>Стоимость</th>
+            <th>Тип</th>
+            <th>Сотрудник</th>
+
+
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in inventory %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td class="col-name">
+                <a href="{% url 'core:inventory_item' pk=item.id %}" title="профиль">
+                    {{ item.name }} 
+                </a>
+            </td>
+            <td>{{ item.description }}</td>
+
+           
+            <td>{{ item.purchase_date }}</td>            
+            <td>{{ item.price }}</td>
+            <td>{{ item.get_inventory_type_display }}</td>
+
+
+            {% if item.person %}
+            <td><a href="{% url 'core:person' pk=item.person.id %}" title="профиль">
+                                    {{ item.person }}</a></td> 
+            {% else %} 
+            <td>-</td>      
+            {% endif %}
+              
+ 
+
+
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

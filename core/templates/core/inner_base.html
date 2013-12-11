@@ -8,6 +8,7 @@
                     <li class="nav-header">Меню</li>
                     <li><a href="{% url 'core:people' %}">Сотрудники</a></li>
                     <li><a href="{% url 'core:candidates' %}">Кандидаты</a></li>
+                    <li><a href="{% url 'core:inventory' %}">Инвентарь</a></li>
                     {% if user.is_staff %}
                     <li><a href="{% url 'core:transactions' %}">Транзакции</a></li>
                     <li><a href="{% url 'core:settings' %}">Настройки</a></li>

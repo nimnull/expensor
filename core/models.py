@@ -376,3 +376,51 @@ class Transaction(models.Model):
         )
         transaction.children.add(connected)
         return connected
+
+
+
+class Inventory(models.Model):
+
+    FURNITURE = 1    
+    ELECTRONICS = 2
+    SOFTWARE = 3
+    VARIOUS = 4
+    
+    TYPE_CHOICES = (    
+        (FURNITURE, 'Мебель'),
+        (ELECTRONICS, 'Оргтехника'),
+        (SOFTWARE, 'ПО'),
+        (VARIOUS, 'Остальное'),
+        )
+
+
+    name = models.CharField(max_length=50)
+    description = models.CharField(max_length=500, blank=True, null=True)
+    purchase_date = models.DateField(u'дата', default=datetime.now)
+    price = models.DecimalField(decimal_places=2, max_digits=10,
+                                 validators=[MinValueValidator(Decimal(0))])
+    inventory_type = models.IntegerField(choices=TYPE_CHOICES, default=VARIOUS)
+    person = models.ForeignKey(Person, blank=True, null=True)
+
+    objects = QuerySetManager()
+
+    class QuerySet(QuerySet):
+
+        def furniture(self):
+            return self.filter(inventory_type=Inventory.FURNITURE)
+
+        def electronics(self):
+            return self.filter(inventory_type=Inventory.ELECTRONICS)
+
+        def software(self):
+            return self.filter(inventory_type=Inventory.SOFTWARE)
+
+        def various(self):
+            return self.filter(inventory_type=Inventory.VARIOUS)
+
+        def not_assigned(self):
+            return self.exclude(person__isnull=False)
+
+
+    def get_absolute_url(self):
+        return reverse('core:inventory_item', kwargs={'pk': self.pk})

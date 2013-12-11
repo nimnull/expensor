@@ -11,7 +11,8 @@ from core.views.settings import (DashboardView, SettingsView, AccountCreateView,
 from core.views.transactions import (TransactionListView, IncomeAddView,
                                      ExpenseAddView, TransferAddView,
                                      CommissionAddView, PaymentAddView)
-
+from core.views.inventory import (InventoryView, InventoryItemView, InventoryEdit,
+                               InventoryAdd)
 
 urlpatterns = patterns('core.views',
     url(r'^dashboard/$', DashboardView.as_view(), name='dashboard'),
@@ -46,4 +47,10 @@ urlpatterns = patterns('core.views',
         name='add_comission'),
     url(r'^payment/add/(?P<pk>\d+)$', PaymentAddView.as_view(),
         name='add_payment'),
+
+    url(r'^inventory/$', InventoryView.as_view(), name='inventory'),
+    url(r'^inventory/(?P<pk>\d+)$', InventoryItemView.as_view(), name='inventory_item'),
+    url(r'^inventory/add/$', InventoryAdd.as_view(), name='add_inventory'),
+    url(r'^inventory/edit/(?P<pk>\d+)$', InventoryEdit.as_view(), name='edit_inventory'),
+
 )

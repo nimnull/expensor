@@ -1,0 +1,66 @@
+{% extends "core/inner_base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="row">
+        <div class="span10">
+            <h3>
+                Инвентарь
+                <sup><small>
+                    <a href="#newInventory" title="добавить инвентарь" data-toggle="modal"><i class="icon-plus"></i></a>
+                </small></sup>
+            </h3>
+            <div class="tabbable">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#all" data-toggle="tab">Весь инвентарь</a></li>
+                    <li><a href="#furniture" data-toggle="tab">Мебель</a></li>
+                    <li><a href="#electronics" data-toggle="tab">Оргтехника</a></li>
+                    <li><a href="#software" data-toggle="tab">ПО</a></li>
+                    <li><a href="#various" data-toggle="tab">Остальное</a></li>
+                    <li><a href="#not_assigned" data-toggle="tab">Ничейное</a></li>
+                </ul>    
+                <div class="tab-content">
+                    <div class="tab-pane active" id="all">
+                        {% with object_list as inventory %}
+                            {% include "core/inventory_list_table.html" %}  
+                        {% endwith %}
+                    </div>
+                    <div class="tab-pane" id="furniture">
+                        {% with object_list.furniture as inventory %}
+                            {% include "core/inventory_list_table.html" %}
+                        {% endwith %}
+                    </div>
+                    <div class="tab-pane" id="electronics">
+                        {% with object_list.electronics as inventory %}
+                            {% include "core/inventory_list_table.html" %}
+                        {% endwith %}
+                    </div>
+                    <div class="tab-pane" id="software">
+                        {% with object_list.software as inventory %}
+                            {% include "core/inventory_list_table.html" %}
+                        {% endwith %}
+                    </div>
+                    <div class="tab-pane" id="various">
+                        {% with object_list.various as inventory %}
+                            {% include "core/inventory_list_table.html" %}
+                        {% endwith %}
+                    </div>    
+                    <div class="tab-pane" id="not_assigned">
+                        {% with object_list.not_assigned as inventory %}
+                            {% include "core/inventory_list_table.html" %}
+                        {% endwith %}
+                    </div>                                                         
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block modals %}
+    <!-- person form -->
+    {% with action_id='newInventory' action_url='core:add_inventory' action_title='Добавление инвентаря' action_form=inventory_form %}
+        {% include "core/modal_form.html" %}
+    {% endwith %}  
+{% endblock modals %}
+
+
