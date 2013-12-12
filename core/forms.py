@@ -3,7 +3,8 @@ from __future__ import absolute_import
 # from decimal import Decimal
 from django import forms
 # from django.contrib.contenttypes.models import ContentType
-from .models import Person, Account, Salary, ExpenseCategory, Currency, Transaction, Candidate
+from .models import (Person, Account, Salary, ExpenseCategory,
+    Currency, Transaction, Candidate, Inventory)
 
 
 class PersonForm(forms.ModelForm):
@@ -99,3 +100,10 @@ class PaymentForm(forms.ModelForm):
     class Meta:
         model = Transaction
         fields = ('account', 'currency', 'amount_src')
+
+
+class InventoryForm(forms.ModelForm):
+
+    class Meta:
+        model = Inventory
+

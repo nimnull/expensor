@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Account, Person, Currency, ExpenseCategory, Transaction, Salary, Candidate
+from .models import (Account, Person, Currency, ExpenseCategory,
+    Transaction, Salary, Candidate, Inventory)
 
 
 class AccountAdmin(admin.ModelAdmin):
@@ -33,9 +34,16 @@ class ExpenseCategoryAdmin(admin.ModelAdmin):
     list_filter = ('direct_expense', 'is_transfer')
 
 
+class InventoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description', 'purchase_date', 'price', 
+                    'inventory_type', 'person',)
+
+
 admin.site.register(Account, AccountAdmin)
 admin.site.register(Person, PersonAdmin)
 admin.site.register(Candidate, CandidateAdmin)
 admin.site.register(Currency)
 admin.site.register(ExpenseCategory, ExpenseCategoryAdmin)
 admin.site.register(Transaction, TransactionAdmin)
+admin.site.register(Inventory, InventoryAdmin)
+
